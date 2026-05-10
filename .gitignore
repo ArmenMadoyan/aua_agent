@@ -1,0 +1,101 @@
+# ----------------------------- Python -----------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+.Python
+build/
+dist/
+site/
+pip-wheel-metadata/
+*.whl
+
+# --------------------- Virtual environments -----------------------
+.venv/
+venv/
+env/
+ENV/
+
+# --------------------- Environment / secrets ----------------------
+.env
+.env.local
+.env.*.local
+
+# ------------------------ Testing / coverage -----------------------
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+
+# -------------------------- Logs / runtime -------------------------
+*.log
+logs/
+*.pid
+*.pid.lock
+
+# --------------------------- Databases -----------------------------
+*.sqlite3
+*.db
+pgdata/
+
+# ----------------------- Terraform / IaC ---------------------------
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+*.tfvars
+*.tfvars.json
+
+# ---------------------------- Docker -------------------------------
+docker-compose.override.yml
+
+# ------------------------------ Node -------------------------------
+node_modules/
+
+# ---------------------- LaTeX build artifacts ----------------------
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.nav
+*.out
+*.run.xml
+*.snm
+*.synctex.gz
+*.toc
+
+# ---------------------------- IDE/editor ---------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# ---------------------------- OS files -----------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ----------------------- Project artifacts -------------------------
+generated_course/
+rag_state/
