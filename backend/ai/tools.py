@@ -1,6 +1,6 @@
 from langchain_core.tools import tool
 
-from ai.vector_store import search
+from backend.ai.vector_store import search
 
 
 @tool(description=(

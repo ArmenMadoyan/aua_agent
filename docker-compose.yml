@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -43,14 +43,9 @@ services:
       - "8501:8501"
     env_file: .env
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@db:5432/aua_agent
-    volumes:
-      - ./aua_policy_pdfs:/app/aua_policy_pdfs:ro
-      - generated_course:/app/generated_course
-      - rag_state:/app/rag_state
+      API_BASE_URL: http://backend:8000
     depends_on:
-      db:
-        condition: service_healthy
+      - backend
 
 volumes:
   pgdata:

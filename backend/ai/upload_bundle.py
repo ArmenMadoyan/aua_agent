@@ -10,8 +10,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from ai.document_text import extract_text_from_bytes, trim_document_text
-from ai.grading_media import homework_file_to_attachment_specs, pdf_bytes_to_png_base64_parts
+from backend.ai.document_text import extract_text_from_bytes, trim_document_text
+from backend.ai.grading_media import homework_file_to_attachment_specs, pdf_bytes_to_png_base64_parts
 
 # If a PDF yields less plain text than this, treat it as a scan and rasterize for vision.
 SCANNED_PDF_CHAR_THRESHOLD = 220

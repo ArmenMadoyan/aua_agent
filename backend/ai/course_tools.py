@@ -1,7 +1,7 @@
 from langchain_core.tools import tool
 
-from ai.course_builders import build_pdf, build_powerpoint
-from ai.course_output import (
+from backend.ai.course_builders import build_pdf, build_powerpoint
+from backend.ai.course_output import (
     GENERATED_COURSE_DIR,
     artifact_url,
     ensure_generated_dir,

@@ -19,10 +19,11 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
-from ai.agents import course_agent, kb_agent
-from ai.chat_context import messages_for_llm_turn
-from ai.config import API_KEY, GRADING_VISION_MODEL
-from ai.grading import build_grading_lc_messages
+from backend.ai.agents import course_agent, kb_agent
+from backend.ai.chat_context import messages_for_llm_turn
+from backend.config import GRADING_VISION_MODEL
+from backend.config import OPENAI_API_KEY as API_KEY
+from backend.ai.grading import build_grading_lc_messages
 
 RouterChoice = Literal["general", "kb", "course", "grading"]
 ForceAgent = Literal["auto", "general", "kb", "course", "grading"]

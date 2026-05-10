@@ -2,7 +2,7 @@ import re
 import uuid
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 GENERATED_COURSE_DIR = BASE_DIR / "generated_course"
 
 
