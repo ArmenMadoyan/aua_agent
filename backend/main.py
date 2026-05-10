@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from backend.ai.agents import init_checkpointer
+from backend.ai.agents import init_checkpointer, _build_agents
 from backend.ai.course_output import GENERATED_COURSE_DIR, ensure_generated_dir
 from backend.ai.vector_store import load_existing_files
 from backend.config import DATABASE_URL
@@ -17,6 +17,7 @@ async def lifespan(app: FastAPI):
     run_migrations()
     ensure_generated_dir()
     init_checkpointer()
+    _build_agents()
     load_existing_files()
     yield
     await close_db()

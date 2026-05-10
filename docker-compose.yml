@@ -33,6 +33,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/chat/list')\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
 
   frontend:
     build:
@@ -44,7 +50,8 @@ services:
     environment:
       API_BASE_URL: http://backend:8000
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   pgdata:

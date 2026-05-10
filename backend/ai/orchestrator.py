@@ -19,7 +19,7 @@ from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
 
-from backend.ai.agents import course_agent, kb_agent
+from backend.ai.agents import get_course_agent, get_kb_agent
 from backend.ai.chat_context import messages_for_llm_turn
 from backend.config import GRADING_VISION_MODEL
 from backend.config import OPENAI_API_KEY as API_KEY
@@ -191,16 +191,19 @@ def _collect_tool_names_from_updates(payload: dict[str, Any], acc: list[str]) ->
                     acc.append(n)
 
 
-def _stream_langgraph_agent(agent, messages: list[dict], tool_acc: list[str]) -> Iterator[str]:
+def _stream_langgraph_agent(
+    agent, messages: list[dict], tool_acc: list[str], *, thread_id: str = "default"
+) -> Iterator[str]:
+    config = {"configurable": {"thread_id": thread_id}}
     for chunk in agent.stream(
         {"messages": messages},
-        context=_AGENT_CONTEXT,
+        config=config,
         stream_mode=["messages", "updates"],
     ):
         mode, payload = chunk[0], chunk[1]
         if mode == "messages":
             msg, meta = payload
-            if meta.get("langgraph_node") != "model":
+            if meta.get("langgraph_node") not in ("model", "agent"):
                 continue
             c = getattr(msg, "content", None) or ""
             if c:
@@ -219,6 +222,7 @@ class OrchestratorResult:
 def iter_chat_turn_tokens(
     messages: list[dict],
     *,
+    chat_id: int | str = "default",
     syllabus_text: str | None = None,
     force_agent: ForceAgent = "auto",
     meta: dict | None = None,
@@ -250,14 +254,14 @@ def iter_chat_turn_tokens(
 
         if force_agent == "kb":
             meta["agent_used"] = "kb"
-            yield from _stream_langgraph_agent(kb_agent, _strip_for_text_agents(msgs), tool_acc)
+            yield from _stream_langgraph_agent(get_kb_agent(), _strip_for_text_agents(msgs), tool_acc, thread_id=str(chat_id))
             return
 
         if force_agent == "course":
             meta["agent_used"] = "course"
             base = _strip_for_text_agents(msgs)
             to_send = _inject_syllabus(base, syllabus) if syllabus_available else base
-            yield from _stream_langgraph_agent(course_agent, to_send, tool_acc)
+            yield from _stream_langgraph_agent(get_course_agent(), to_send, tool_acc, thread_id=str(chat_id))
             return
 
         if force_agent == "grading":
@@ -276,7 +280,7 @@ def iter_chat_turn_tokens(
             return
 
         if choice == "kb":
-            yield from _stream_langgraph_agent(kb_agent, _strip_for_text_agents(msgs), tool_acc)
+            yield from _stream_langgraph_agent(get_kb_agent(), _strip_for_text_agents(msgs), tool_acc, thread_id=str(chat_id))
             return
 
         if choice == "grading":
@@ -285,7 +289,7 @@ def iter_chat_turn_tokens(
 
         base = _strip_for_text_agents(msgs)
         to_send = _inject_syllabus(base, syllabus) if syllabus_available else base
-        yield from _stream_langgraph_agent(course_agent, to_send, tool_acc)
+        yield from _stream_langgraph_agent(get_course_agent(), to_send, tool_acc, thread_id=str(chat_id))
     finally:
         meta["tool_names"] = list(dict.fromkeys(tool_acc))
 
@@ -293,6 +297,7 @@ def iter_chat_turn_tokens(
 def run_chat_turn(
     messages: list[dict],
     *,
+    chat_id: int | str = "default",
     syllabus_text: str | None = None,
     force_agent: ForceAgent = "auto",
 ) -> OrchestratorResult:
@@ -303,6 +308,7 @@ def run_chat_turn(
     parts: list[str] = []
     for piece in iter_chat_turn_tokens(
         messages,
+        chat_id=chat_id,
         syllabus_text=syllabus_text,
         force_agent=force_agent,
         meta=meta,

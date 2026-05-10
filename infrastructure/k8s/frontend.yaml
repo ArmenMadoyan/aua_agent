@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/capstone-frontend:latest
+          image: armenmadoyan/capstone-frontend:latest
           ports:
             - containerPort: 8501
           env:
@@ -34,11 +34,11 @@ spec:
             periodSeconds: 10
           resources:
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 100m
+              memory: 128Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 300m
+              memory: 256Mi
 ---
 apiVersion: v1
 kind: Service
@@ -46,8 +46,9 @@ metadata:
   name: frontend
   namespace: capstone
 spec:
+  type: LoadBalancer
   selector:
     app: frontend
   ports:
-    - port: 8501
+    - port: 80
       targetPort: 8501

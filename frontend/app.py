@@ -1,6 +1,7 @@
 import base64
 import os
 import re
+import time
 from datetime import datetime
 
 import httpx
@@ -22,11 +23,20 @@ if "messages" not in st.session_state:
 
 BATCH_UPLOAD_SESSION_KEY = "batch_attachments"
 
+_MAX_RETRIES = 30
+_RETRY_DELAY = 2
+
 
 def _api(method: str, path: str, **kwargs) -> httpx.Response:
     url = f"{API_BASE}{path}"
-    with httpx.Client(timeout=300) as client:
-        return getattr(client, method)(url, **kwargs)
+    for attempt in range(_MAX_RETRIES):
+        try:
+            with httpx.Client(timeout=300) as client:
+                return getattr(client, method)(url, **kwargs)
+        except (httpx.ConnectError, httpx.RemoteProtocolError):
+            if attempt == _MAX_RETRIES - 1:
+                raise
+            time.sleep(_RETRY_DELAY)
 
 
 def load_chat_messages(chat_id: int):
@@ -195,20 +205,23 @@ if prompt := st.chat_input("Ask a question..."):
 
             collected_tokens: list[str] = []
 
-            with httpx.Client(timeout=300) as client:
-                with client.stream(
-                    "POST",
-                    f"{API_BASE}/chat/stream",
-                    json=body,
-                    headers={"Accept": "text/event-stream"},
-                ) as response:
-                    response.raise_for_status()
-                    placeholder = st.empty()
-                    for line in response.iter_lines():
-                        if line.startswith("data: "):
-                            token = line[6:]
-                            collected_tokens.append(token)
-                            placeholder.markdown("".join(collected_tokens))
+            try:
+                with httpx.Client(timeout=300) as client:
+                    with client.stream(
+                        "POST",
+                        f"{API_BASE}/chat/stream",
+                        json=body,
+                        headers={"Accept": "text/event-stream"},
+                    ) as response:
+                        response.raise_for_status()
+                        placeholder = st.empty()
+                        for line in response.iter_lines():
+                            if line.startswith("data: "):
+                                token = line[6:]
+                                collected_tokens.append(token)
+                                placeholder.markdown("".join(collected_tokens))
+            except httpx.RemoteProtocolError:
+                pass
 
             reply = "".join(collected_tokens)
             if not reply:

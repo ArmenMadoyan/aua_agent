@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import asyncio
 import hashlib
+from collections.abc import AsyncIterator, Iterator
 from typing import Any
 
 from sqlalchemy import delete, func, select, update
@@ -8,6 +10,33 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.ai.document_text import merge_reference_block_into_last_user
 from backend.ai.orchestrator import OrchestratorResult, iter_chat_turn_tokens, run_chat_turn
+
+_SENTINEL = object()
+
+
+async def _sync_gen_to_async(sync_gen: Iterator[str]) -> AsyncIterator[str]:
+    """Bridge a blocking sync generator to an async iterator via a thread + queue."""
+    queue: asyncio.Queue = asyncio.Queue()
+    loop = asyncio.get_running_loop()
+
+    def _produce():
+        try:
+            for item in sync_gen:
+                loop.call_soon_threadsafe(queue.put_nowait, item)
+        except Exception as exc:
+            loop.call_soon_threadsafe(queue.put_nowait, exc)
+        finally:
+            loop.call_soon_threadsafe(queue.put_nowait, _SENTINEL)
+
+    loop.run_in_executor(None, _produce)
+
+    while True:
+        item = await queue.get()
+        if item is _SENTINEL:
+            break
+        if isinstance(item, Exception):
+            raise item
+        yield item
 from backend.ai.vector_store import (
     add_document as vs_add_document,
     delete_document as vs_delete_document,
@@ -153,8 +182,10 @@ async def answer_question(
             messages, reference_parts=reference_documents
         )
 
-    out: OrchestratorResult = run_chat_turn(
+    out: OrchestratorResult = await asyncio.to_thread(
+        run_chat_turn,
         messages,
+        chat_id=chat_id,
         syllabus_text=syllabus_text,
         force_agent=agent,
     )
@@ -221,12 +252,15 @@ async def stream_answer(
     meta: dict = {}
     collected: list[str] = []
 
-    for token in iter_chat_turn_tokens(
+    sync_gen = iter_chat_turn_tokens(
         messages,
+        chat_id=chat_id,
         syllabus_text=syllabus_text,
         force_agent=agent,
         meta=meta,
-    ):
+    )
+
+    async for token in _sync_gen_to_async(sync_gen):
         collected.append(token)
         yield token
 

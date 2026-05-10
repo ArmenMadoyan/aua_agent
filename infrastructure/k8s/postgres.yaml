@@ -1,22 +1,10 @@
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: pgdata
-  namespace: capstone
-spec:
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: gp2
-  resources:
-    requests:
-      storage: 5Gi
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: db
   namespace: capstone
 spec:
+  serviceName: db
   replicas: 1
   selector:
     matchLabels:
@@ -41,6 +29,8 @@ spec:
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
               value: "aua_agent"
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           volumeMounts:
             - name: pgdata
               mountPath: /var/lib/postgresql/data
@@ -51,15 +41,20 @@ spec:
             periodSeconds: 5
           resources:
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 100m
+              memory: 128Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
-      volumes:
-        - name: pgdata
-          persistentVolumeClaim:
-            claimName: pgdata
+              cpu: 300m
+              memory: 256Mi
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: gp2
+        resources:
+          requests:
+            storage: 5Gi
 ---
 apiVersion: v1
 kind: Service
@@ -67,6 +62,7 @@ metadata:
   name: db
   namespace: capstone
 spec:
+  clusterIP: None
   selector:
     app: db
   ports:

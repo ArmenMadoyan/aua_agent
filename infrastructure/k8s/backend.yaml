@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: YOUR_AWS_ACCOUNT_ID.dkr.ecr.eu-central-1.amazonaws.com/capstone-backend:latest
+          image: armenmadoyan/capstone-backend:latest
           ports:
             - containerPort: 8000
           env:
@@ -34,11 +34,11 @@ spec:
             periodSeconds: 10
           resources:
             requests:
-              cpu: 200m
-              memory: 256Mi
+              cpu: 100m
+              memory: 128Mi
             limits:
-              cpu: 500m
-              memory: 512Mi
+              cpu: 300m
+              memory: 256Mi
 ---
 apiVersion: v1
 kind: Service

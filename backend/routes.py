@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
 from sse_starlette.sse import EventSourceResponse
@@ -7,6 +9,8 @@ from sse_starlette.sse import EventSourceResponse
 from backend.auth import require_auth
 from backend.db import get_session
 from backend import schemas, services
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(dependencies=[Depends(require_auth)])
 
@@ -68,6 +72,7 @@ async def answer_chat_question(
             reference_documents=ref_parts,
         )
     except Exception as e:
+        logger.exception("Error in /chat/answer: %s", e)
         raise HTTPException(status_code=500, detail=str(e))
 
     return result
@@ -89,16 +94,20 @@ async def stream_chat_answer(
         ref_parts = [(d.title, d.text) for d in payload.reference_documents]
 
     async def event_generator():
-        async for token in services.stream_answer(
-            session,
-            payload.chat_id,
-            payload.question,
-            agent=payload.agent,
-            syllabus_text=payload.syllabus_text,
-            attachments=attachments,
-            reference_documents=ref_parts,
-        ):
-            yield {"data": token}
+        try:
+            async for token in services.stream_answer(
+                session,
+                payload.chat_id,
+                payload.question,
+                agent=payload.agent,
+                syllabus_text=payload.syllabus_text,
+                attachments=attachments,
+                reference_documents=ref_parts,
+            ):
+                yield {"data": token}
+        except Exception as e:
+            logger.exception("Error in /chat/stream: %s", e)
+            yield {"data": f"[ERROR] {e}"}
 
     return EventSourceResponse(event_generator())
 
