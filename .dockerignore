@@ -8,6 +8,7 @@ __pycache__
 .DS_Store
 .idea
 .vscode
+.cursor
 pgdata
 *.log
 .mypy_cache
@@ -15,3 +16,7 @@ pgdata
 .ruff_cache
 generated_course
 rag_state
+paper/
+infrastructure/
+.dockerignore
+docker-compose.yml

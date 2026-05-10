@@ -19,7 +19,7 @@ services:
   backend:
     build:
       context: .
-      target: backend
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     ports:
       - "8000:8000"
@@ -37,11 +37,10 @@ services:
   frontend:
     build:
       context: .
-      target: frontend
+      dockerfile: frontend/Dockerfile
     restart: unless-stopped
     ports:
       - "8501:8501"
-    env_file: .env
     environment:
       API_BASE_URL: http://backend:8000
     depends_on:
