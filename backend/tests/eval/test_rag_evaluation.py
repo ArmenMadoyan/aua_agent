@@ -6,22 +6,17 @@ artifact report, not a pass/fail signal.
 
 from __future__ import annotations
 
-import os
 from pathlib import Path
 
 import pytest
 
+from backend.config import RUN_RAG_EVAL
 from backend.tests.eval.evaluator import RAGEvaluator
-
-
-def _flag_enabled() -> bool:
-    return os.getenv("RUN_RAG_EVAL", "").lower() in {"1", "true", "yes", "on"}
-
 
 pytestmark = [
     pytest.mark.skipif(
-        not _flag_enabled(),
-        reason="RAG evaluation requires RUN_RAG_EVAL=true (live DB + LLM + Gemini keys)",
+        not RUN_RAG_EVAL,
+        reason="RAG evaluation disabled — set RUN_RAG_EVAL=True in backend/config.py or RUN_RAG_EVAL=true env var",
     ),
     pytest.mark.evaluation,
 ]

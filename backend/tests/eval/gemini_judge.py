@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import time
 from typing import Any
 
+from backend.config import GEMINI_API_KEY
 from backend.tests.eval.judge_prompts import (
     CITATION_ACCURACY_PROMPT,
     COMPLETENESS_PROMPT,
@@ -24,15 +24,15 @@ RATE_LIMIT_SLEEP_SECONDS = 0.5
 
 class GeminiJudge:
     def __init__(self, model_name: str = DEFAULT_MODEL):
-        api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-        if not api_key:
+        if not GEMINI_API_KEY:
             raise RuntimeError(
-                "GEMINI_API_KEY (or GOOGLE_API_KEY) must be set to run the RAG evaluation"
+                "GEMINI_API_KEY (or GOOGLE_API_KEY) must be set in backend/config.py "
+                "or via env var to run the RAG evaluation"
             )
 
         import google.generativeai as genai
 
-        genai.configure(api_key=api_key)
+        genai.configure(api_key=GEMINI_API_KEY)
         self._genai = genai
         self._model = genai.GenerativeModel(model_name)
         self._gen_config = genai.GenerationConfig(

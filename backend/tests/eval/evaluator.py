@@ -221,6 +221,41 @@ class RAGEvaluator:
 
         return {"json": json_path, "xlsx": xlsx_path}
 
+    def _per_query_headers(self) -> list[str]:
+        headers = [
+            "id",
+            "category",
+            "query",
+            "agent_used",
+            "latency_s",
+            "error",
+            "retrieved_sources",
+            "answer_preview",
+        ]
+        for dim in DIMENSIONS:
+            headers.extend([f"{dim}_score", f"{dim}_explanation"])
+        return headers
+
+    def _per_query_row(self, entry: dict[str, Any]) -> list[Any]:
+        tc = entry["test_case"]
+        rr = entry["rag_result"]
+        sc = entry["scores"]
+        row: list[Any] = [
+            tc.get("id"),
+            tc.get("category"),
+            tc.get("query"),
+            rr.get("agent_used"),
+            rr.get("latency_seconds"),
+            rr.get("error") or "",
+            ", ".join(c.get("source", "") for c in rr.get("chunks", [])),
+            (rr.get("answer") or "")[:500],
+        ]
+        for dim in DIMENSIONS:
+            d = sc.get(dim, {}) or {}
+            row.append(d.get("score"))
+            row.append(d.get("explanation", ""))
+        return row
+
     def _save_excel(self, report: dict[str, Any], path: Path) -> None:
         try:
             from openpyxl import Workbook
@@ -267,39 +302,9 @@ class RAGEvaluator:
 
         # Sheet 2: Per Query
         per_q = wb.create_sheet("Per Query")
-        headers = [
-            "id",
-            "category",
-            "query",
-            "agent_used",
-            "latency_s",
-            "error",
-            "retrieved_sources",
-            "answer_preview",
-        ]
-        for dim in DIMENSIONS:
-            headers.extend([f"{dim}_score", f"{dim}_explanation"])
-        per_q.append(headers)
-
+        per_q.append(self._per_query_headers())
         for entry in report.get("per_query", []):
-            tc = entry["test_case"]
-            rr = entry["rag_result"]
-            sc = entry["scores"]
-            row = [
-                tc.get("id"),
-                tc.get("category"),
-                tc.get("query"),
-                rr.get("agent_used"),
-                rr.get("latency_seconds"),
-                rr.get("error") or "",
-                ", ".join(c.get("source", "") for c in rr.get("chunks", [])),
-                (rr.get("answer") or "")[:500],
-            ]
-            for dim in DIMENSIONS:
-                d = sc.get(dim, {}) or {}
-                row.append(d.get("score"))
-                row.append(d.get("explanation", ""))
-            per_q.append(row)
+            per_q.append(self._per_query_row(entry))
 
         # Sheet 3: By Category
         cat = wb.create_sheet("By Category")
