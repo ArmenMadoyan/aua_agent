@@ -22,6 +22,10 @@ ENV/
 .env
 .env.local
 .env.*.local
+# K8s Secret manifests must never be committed — secrets are injected
+# at deploy time from GitHub Actions Secrets (see .github/workflows/cd.yml).
+infrastructure/k8s/secrets.yaml
+infrastructure/k8s/secrets.*.yaml
 
 # ------------------------ Testing / coverage -----------------------
 .coverage

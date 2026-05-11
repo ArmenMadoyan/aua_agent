@@ -26,6 +26,16 @@ spec:
                 secretKeyRef:
                   name: app-secrets
                   key: OPENAI_API_KEY
+            - name: ANTHROPIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: ANTHROPIC_API_KEY
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: GEMINI_API_KEY
           readinessProbe:
             httpGet:
               path: /docs
