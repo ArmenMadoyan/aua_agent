@@ -186,7 +186,11 @@ def _collect_tool_names_from_updates(payload: dict[str, Any], acc: list[str]) ->
             continue
         for m in inner.get("messages", []):
             for tc in getattr(m, "tool_calls", None) or []:
-                n = tc.get("name") if isinstance(tc, dict) else getattr(tc, "name", None)
+                n = (
+                    tc.get("name")
+                    if isinstance(tc, dict)
+                    else getattr(tc, "name", None)
+                )
                 if n:
                     acc.append(n)
 
@@ -254,14 +258,21 @@ def iter_chat_turn_tokens(
 
         if force_agent == "kb":
             meta["agent_used"] = "kb"
-            yield from _stream_langgraph_agent(get_kb_agent(), _strip_for_text_agents(msgs), tool_acc, thread_id=str(chat_id))
+            yield from _stream_langgraph_agent(
+                get_kb_agent(),
+                _strip_for_text_agents(msgs),
+                tool_acc,
+                thread_id=str(chat_id),
+            )
             return
 
         if force_agent == "course":
             meta["agent_used"] = "course"
             base = _strip_for_text_agents(msgs)
             to_send = _inject_syllabus(base, syllabus) if syllabus_available else base
-            yield from _stream_langgraph_agent(get_course_agent(), to_send, tool_acc, thread_id=str(chat_id))
+            yield from _stream_langgraph_agent(
+                get_course_agent(), to_send, tool_acc, thread_id=str(chat_id)
+            )
             return
 
         if force_agent == "grading":
@@ -280,7 +291,12 @@ def iter_chat_turn_tokens(
             return
 
         if choice == "kb":
-            yield from _stream_langgraph_agent(get_kb_agent(), _strip_for_text_agents(msgs), tool_acc, thread_id=str(chat_id))
+            yield from _stream_langgraph_agent(
+                get_kb_agent(),
+                _strip_for_text_agents(msgs),
+                tool_acc,
+                thread_id=str(chat_id),
+            )
             return
 
         if choice == "grading":
@@ -289,7 +305,9 @@ def iter_chat_turn_tokens(
 
         base = _strip_for_text_agents(msgs)
         to_send = _inject_syllabus(base, syllabus) if syllabus_available else base
-        yield from _stream_langgraph_agent(get_course_agent(), to_send, tool_acc, thread_id=str(chat_id))
+        yield from _stream_langgraph_agent(
+            get_course_agent(), to_send, tool_acc, thread_id=str(chat_id)
+        )
     finally:
         meta["tool_names"] = list(dict.fromkeys(tool_acc))
 

@@ -51,20 +51,22 @@ def _parse_slides_text(slides_text: str) -> list[tuple[str, list[str]]]:
     return slides
 
 
-@tool(description=(
-    "Create a real PowerPoint (.pptx) file from slide content you write. "
-    "Use when the user wants lecture slides or a slide deck. "
-    "Argument deck_title: short name for the file. "
-    "Argument slides_text: one block per slide. Start each slide with a line "
-    "'SLIDE: Title Here' then bullet lines starting with '- '. "
-    "Example:\n"
-    "SLIDE: Introduction\n"
-    "- Goal of today\n"
-    "- Outline\n\n"
-    "SLIDE: Next topic\n"
-    "- Point one\n"
-    "Returns the download path for the user."
-))
+@tool(
+    description=(
+        "Create a real PowerPoint (.pptx) file from slide content you write. "
+        "Use when the user wants lecture slides or a slide deck. "
+        "Argument deck_title: short name for the file. "
+        "Argument slides_text: one block per slide. Start each slide with a line "
+        "'SLIDE: Title Here' then bullet lines starting with '- '. "
+        "Example:\n"
+        "SLIDE: Introduction\n"
+        "- Goal of today\n"
+        "- Outline\n\n"
+        "SLIDE: Next topic\n"
+        "- Point one\n"
+        "Returns the download path for the user."
+    )
+)
 def create_powerpoint_deck(deck_title: str, slides_text: str) -> str:
     ensure_generated_dir()
     slides = _parse_slides_text(slides_text)
@@ -79,16 +81,18 @@ def create_powerpoint_deck(deck_title: str, slides_text: str) -> str:
     )
 
 
-@tool(description=(
-    "Create a real PDF file for homework, quiz, midterm, final exam, or any written "
-    "assessment or assignment. Use when the user wants homework, quizzes, exams, or "
-    "problem sets as a PDF. "
-    "Argument document_type: one of homework, quiz, midterm, final_exam, or other. "
-    "Argument title: document title shown at the top. "
-    "Argument body: full text of the assignment or exam (questions, instructions, "
-    "space descriptions). Use plain text; separate major sections with a blank line. "
-    "Returns the download path for the user."
-))
+@tool(
+    description=(
+        "Create a real PDF file for homework, quiz, midterm, final exam, or any written "
+        "assessment or assignment. Use when the user wants homework, quizzes, exams, or "
+        "problem sets as a PDF. "
+        "Argument document_type: one of homework, quiz, midterm, final_exam, or other. "
+        "Argument title: document title shown at the top. "
+        "Argument body: full text of the assignment or exam (questions, instructions, "
+        "space descriptions). Use plain text; separate major sections with a blank line. "
+        "Returns the download path for the user."
+    )
+)
 def create_course_pdf(document_type: str, title: str, body: str) -> str:
     ensure_generated_dir()
     stem = safe_stem(f"{document_type}_{title}")

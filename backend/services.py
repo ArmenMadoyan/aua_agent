@@ -9,7 +9,19 @@ from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.ai.document_text import merge_reference_block_into_last_user
-from backend.ai.orchestrator import OrchestratorResult, iter_chat_turn_tokens, run_chat_turn
+from backend.ai.orchestrator import (
+    OrchestratorResult,
+    iter_chat_turn_tokens,
+    run_chat_turn,
+)
+from backend.ai.vector_store import (
+    add_document as vs_add_document,
+    delete_document as vs_delete_document,
+    document_exists as vs_document_exists,
+    list_documents as vs_list_documents,
+)
+from backend.config import DEFAULT_USER_ID
+from backend.models import Conversation, LLMModel, Message
 
 _SENTINEL = object()
 
@@ -37,14 +49,6 @@ async def _sync_gen_to_async(sync_gen: Iterator[str]) -> AsyncIterator[str]:
         if isinstance(item, Exception):
             raise item
         yield item
-from backend.ai.vector_store import (
-    add_document as vs_add_document,
-    delete_document as vs_delete_document,
-    document_exists as vs_document_exists,
-    list_documents as vs_list_documents,
-)
-from backend.config import DEFAULT_USER_ID
-from backend.models import Conversation, LLMModel, Message
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -87,8 +91,9 @@ async def create_session(
 
 async def list_sessions(session: AsyncSession) -> list[dict]:
     result = await session.execute(
-        select(Conversation)
-        .order_by(Conversation.updated_at.desc(), Conversation.id.desc())
+        select(Conversation).order_by(
+            Conversation.updated_at.desc(), Conversation.id.desc()
+        )
     )
     rows = result.scalars().all()
     return [
@@ -154,7 +159,9 @@ async def add_message(
 
 async def delete_chat(session: AsyncSession, chat_id: int) -> bool:
     result = await session.execute(
-        delete(Conversation).where(Conversation.id == chat_id).returning(Conversation.id)
+        delete(Conversation)
+        .where(Conversation.id == chat_id)
+        .returning(Conversation.id)
     )
     await session.commit()
     return result.scalar_one_or_none() is not None
@@ -207,7 +214,9 @@ async def answer_question(
     if prefixes:
         persist_question = "\n".join(prefixes) + "\n\n" + question
 
-    await add_message(session, chat_id, "user", persist_question, agent_name=agent_label)
+    await add_message(
+        session, chat_id, "user", persist_question, agent_name=agent_label
+    )
     await add_message(
         session,
         chat_id,
@@ -282,7 +291,9 @@ async def stream_answer(
     if prefixes:
         persist_question = "\n".join(prefixes) + "\n\n" + question
 
-    await add_message(session, chat_id, "user", persist_question, agent_name=agent_label)
+    await add_message(
+        session, chat_id, "user", persist_question, agent_name=agent_label
+    )
     await add_message(
         session,
         chat_id,
@@ -308,7 +319,9 @@ async def knowledge_add_document(content: str, file_name: str | None = None) -> 
     return {"success": True, "doc_hash": doc_hash, "is_duplicate": is_duplicate}
 
 
-async def knowledge_upload_document(content_str: str, file_name: str | None = None) -> dict:
+async def knowledge_upload_document(
+    content_str: str, file_name: str | None = None
+) -> dict:
     doc_hash = hashlib.md5(content_str.encode("utf-8")).hexdigest()
     is_duplicate = vs_document_exists(doc_hash)
     vs_add_document(content_str, file_name=file_name)

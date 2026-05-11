@@ -38,8 +38,11 @@ def _ascii_fallback_text(text: str) -> str:
         .replace("⇒", "=>")
         .replace("—", "-")
         .replace("–", "-")
-        .replace(""", '"')
-        .replace(""", '"')
+        .replace(
+            """, '"')
+        .replace(""",
+            '"',
+        )
         .replace("'", "'")
         .replace("'", "'")
         .replace("…", "...")

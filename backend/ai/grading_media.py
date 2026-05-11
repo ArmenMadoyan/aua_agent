@@ -28,7 +28,9 @@ def _pymupdf_module():
     return m
 
 
-def pdf_bytes_to_png_base64_parts(data: bytes, *, max_pages: int = MAX_PDF_PAGES) -> list[tuple[str, str]]:
+def pdf_bytes_to_png_base64_parts(
+    data: bytes, *, max_pages: int = MAX_PDF_PAGES
+) -> list[tuple[str, str]]:
     """
     Rasterize PDF pages to PNG. Returns list of (mime_type, base64_str) per page.
     """
@@ -78,4 +80,6 @@ def homework_file_to_attachment_specs(
             f"Unsupported homework file type {ext or '(none)'}. "
             "Use PDF, JPEG, PNG, WebP, or GIF."
         )
-    return [{"mime_type": mime, "base64": base64.standard_b64encode(data).decode("ascii")}]
+    return [
+        {"mime_type": mime, "base64": base64.standard_b64encode(data).decode("ascii")}
+    ]

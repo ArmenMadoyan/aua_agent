@@ -83,7 +83,10 @@ def merge_reference_block_into_last_user(
 
     block = "\n\n".join(sections)
     if len(block) > MAX_REFERENCE_BLOCK_CHARS:
-        block = block[:MAX_REFERENCE_BLOCK_CHARS].rstrip() + "\n\n[… reference block truncated …]"
+        block = (
+            block[:MAX_REFERENCE_BLOCK_CHARS].rstrip()
+            + "\n\n[… reference block truncated …]"
+        )
 
     out = [dict(m) for m in messages]
     for i in range(len(out) - 1, -1, -1):

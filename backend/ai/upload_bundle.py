@@ -11,7 +11,10 @@ from pathlib import Path
 from typing import Any
 
 from backend.ai.document_text import extract_text_from_bytes, trim_document_text
-from backend.ai.grading_media import homework_file_to_attachment_specs, pdf_bytes_to_png_base64_parts
+from backend.ai.grading_media import (
+    homework_file_to_attachment_specs,
+    pdf_bytes_to_png_base64_parts,
+)
 
 # If a PDF yields less plain text than this, treat it as a scan and rasterize for vision.
 SCANNED_PDF_CHAR_THRESHOLD = 220
@@ -92,7 +95,9 @@ def bundle_chat_uploads(*, prompt: str, uploads: list[Any]) -> dict[str, Any]:
                     attachments.append({"mime_type": mime, "base64": b64})
                     vision_budget -= 1
                 if not parts and not extracted:
-                    doc_sections.append(f"### {name}\n[No extractable text; could not rasterize PDF.]")
+                    doc_sections.append(
+                        f"### {name}\n[No extractable text; could not rasterize PDF.]"
+                    )
             continue
 
         if ext in {".txt", ".docx"}:
@@ -102,7 +107,9 @@ def bundle_chat_uploads(*, prompt: str, uploads: list[Any]) -> dict[str, Any]:
                 doc_sections.append(f"### {name}\n[Could not read: {e}]")
                 continue
             if extracted:
-                doc_sections.append(f"### {name}\n{trim_document_text(extracted, 80_000)}")
+                doc_sections.append(
+                    f"### {name}\n{trim_document_text(extracted, 80_000)}"
+                )
             else:
                 doc_sections.append(f"### {name}\n[Empty or no text extracted.]")
             continue
@@ -119,7 +126,11 @@ def bundle_chat_uploads(*, prompt: str, uploads: list[Any]) -> dict[str, Any]:
         ).strip()
 
     names_line = ", ".join(filenames)
-    display_content = f"{prompt}\n\n*Attached ({len(filenames)}): {names_line}*" if filenames else prompt
+    display_content = (
+        f"{prompt}\n\n*Attached ({len(filenames)}): {names_line}*"
+        if filenames
+        else prompt
+    )
 
     return {
         "display_content": display_content,

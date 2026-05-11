@@ -2,7 +2,7 @@ import base64
 import os
 import re
 import time
-from datetime import datetime 
+from datetime import datetime
 
 import httpx
 import streamlit as st
@@ -178,15 +178,21 @@ if prompt := st.chat_input("Ask a question..."):
         b64 = base64.standard_b64encode(raw).decode("ascii")
         ext = name.rsplit(".", 1)[-1].lower() if "." in name else ""
         mime_map = {
-            "jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png",
-            "webp": "image/webp", "gif": "image/gif", "pdf": "application/pdf",
+            "jpg": "image/jpeg",
+            "jpeg": "image/jpeg",
+            "png": "image/png",
+            "webp": "image/webp",
+            "gif": "image/gif",
+            "pdf": "application/pdf",
         }
         mime = mime_map.get(ext, "application/octet-stream")
         attachments.append({"mime_type": mime, "base64": b64})
 
     display_content = prompt
     if filenames:
-        display_content = f"{prompt}\n\n*Attached ({len(filenames)}): {', '.join(filenames)}*"
+        display_content = (
+            f"{prompt}\n\n*Attached ({len(filenames)}): {', '.join(filenames)}*"
+        )
 
     with st.chat_message("user"):
         st.markdown(display_content)
@@ -242,7 +248,9 @@ if prompt := st.chat_input("Ask a question..."):
         except Exception as e:
             error_msg = f"❌ Error: {e}"
             st.error(error_msg)
-            st.session_state.messages.append({"role": "assistant", "content": error_msg})
+            st.session_state.messages.append(
+                {"role": "assistant", "content": error_msg}
+            )
 
     st.session_state.pop(BATCH_UPLOAD_SESSION_KEY, None)
     st.rerun()

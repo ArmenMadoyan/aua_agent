@@ -12,7 +12,7 @@ from langchain_postgres import PGVector
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pypdf import PdfReader
 
-from backend.config import DATABASE_URL, EMBEDDING_DIMENSION, OPENAI_API_KEY
+from backend.config import DATABASE_URL, OPENAI_API_KEY
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 

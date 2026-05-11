@@ -3,7 +3,8 @@ from langchain_core.tools import tool
 from backend.ai.vector_store import search
 
 
-@tool(description=(
+@tool(
+    description=(
         "Search the AUA policy PDF knowledge base for information relevant to a question. "
         "Use this tool when you need to find AUA policies, procedures, or official information "
         "from the American University of Armenia policy documents. The tool runs embedding-based "
@@ -11,7 +12,8 @@ from backend.ai.vector_store import search
         "for questions about AUA rules, academic policies, HR, facilities, admissions, conduct, "
         "etc. If the question is unrelated to AUA policies or general knowledge you already "
         "know, you may answer without this tool. Input: the user's question or a search query."
-))
+    )
+)
 def retrieve_from_knowledge_base(question: str) -> str:
     results = search(query=question, k=5)
 

@@ -22,7 +22,9 @@ def messages_for_llm_turn(messages: list[dict]) -> list[dict]:
         role = m.get("role")
         if role == "assistant":
             c = m.get("content") or ""
-            out.append({"role": "assistant", "content": c if isinstance(c, str) else str(c)})
+            out.append(
+                {"role": "assistant", "content": c if isinstance(c, str) else str(c)}
+            )
             continue
 
         if role == "user":
@@ -45,6 +47,8 @@ def messages_for_llm_turn(messages: list[dict]) -> list[dict]:
             continue
 
         c = m.get("content") or ""
-        out.append({"role": role or "user", "content": c if isinstance(c, str) else str(c)})
+        out.append(
+            {"role": role or "user", "content": c if isinstance(c, str) else str(c)}
+        )
 
     return out
