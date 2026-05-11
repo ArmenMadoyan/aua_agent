@@ -1,94 +1,243 @@
-## Q&A agent API 
+## AUA Q&A Agent
 
-### Objective
-Agent that answers questions about **American University of Armenia (AUA) policies** using OpenAI and a local knowledge base built from AUA policy PDFs.
+AI-powered Q&A agent for **American University of Armenia (AUA) policies** — built with FastAPI, Streamlit, LangGraph, and OpenAI GPT-4.1.
+
+### Architecture
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
+│   Streamlit  │────▶│   FastAPI    │────▶│  PostgreSQL 16   │
+│   Frontend   │     │   Backend    │     │  + pgvector      │
+│   :8501      │     │   :8000      │     │  :5432           │
+└──────────────┘     └──────┬───────┘     └──────────────────┘
+                            │
+                     ┌──────▼───────┐
+                     │  LangGraph   │
+                     │  Agents      │
+                     │  + OpenAI    │
+                     └──────────────┘
+```
 
 ### Project Structure
 
-The project is organized into three main components:
-
-- **`frontend/`** - Streamlit web UI
-- **`backend/`** - FastAPI REST API
-- **`ai/`** - AI components (agents, tools, vector store)
-- **`aua_policy_pdfs/`** - AUA policy PDF documents (primary data source for retrieval)
-
-### What this project does
-
-Q&A agent using:
-- **LangChain** + **`langchain-openai`**
-- **OpenAI GPT-4.1** (or compatible model via API key)
-- **AUA policy PDFs** in `aua_policy_pdfs/` as the data source for retrieval (text is chunked, embedded with OpenAI, stored in **PostgreSQL** as `double precision[]` per chunk; similarity search runs in the app using cosine distance—**no** `vector` extension required)
-
-### Setup
-
-- **Python**: 3.11+  
-- Create a virtual environment (recommended) and install dependencies from `requirements.txt`:
-  ```bash
-  python -m venv venv
-  source venv/bin/activate   # Windows: venv\Scripts\activate
-  pip install -r requirements.txt
-  ```
-- Set `OPENAI_API_KEY` (via `.env` or environment variable)
-- Set **`DATABASE_URL`** in `.env` to a real PostgreSQL URL. The **username** must be an existing Postgres role (not the placeholder word `user`). On a typical local Mac install, that is often your macOS login name, e.g. `postgresql://yourname@localhost:5432/postgres` (no password if using peer/trust), or `postgresql://yourname:yourpassword@localhost:5432/dbname`. Create the database first if needed (`createdb mydb`). No PostgreSQL extensions are required; embeddings use the built-in `double precision[]` type. Optional: set **`EMBEDDING_DIMENSION`** (default `1536`) to match your embedding model and re-run migrations if you change it on a fresh database.
-- **Migrations**: from the project root (venv activated, `DATABASE_URL` set), apply the schema with:
-  ```bash
-  alembic upgrade head
-  ```
-  Alternatively, starting the API or Streamlit runs `init_db()`, which performs the same `alembic upgrade head` for you.
-- **Changing the schema**: add a **new** revision under `alembic/versions/` (e.g. `alembic revision -m "describe change"`), edit the generated file with `upgrade()` / `downgrade()` steps (`op.add_column`, `op.create_table`, etc.), then run `alembic upgrade head` again. Avoid editing `0001_initial` once it has been applied anywhere you care about; stack new migrations on top instead.
-
-### How to run (Backend - FastAPI)
-
-From the project root, with your venv activated:
-
-```bash
-uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000
+```
+├── backend/              # FastAPI REST API
+│   ├── ai/               # LangGraph agents, tools, vector store, orchestrator
+│   ├── main.py           # App entrypoint
+│   ├── models.py         # SQLAlchemy models
+│   ├── services.py       # Business logic
+│   └── Dockerfile
+├── frontend/             # Streamlit web UI
+│   ├── app.py
+│   └── Dockerfile
+├── infrastructure/       # IaC and K8s
+│   ├── *.tf              # Terraform (EKS, VPC, IAM)
+│   └── k8s/              # Kubernetes manifests
+├── .github/workflows/    # CI/CD pipelines
+├── alembic/              # Database migrations
+├── aua_policy_pdfs/      # AUA policy PDFs (RAG data source)
+└── docker-compose.yml    # Local Docker setup
 ```
 
-Then open the interactive Swagger UI:
+---
 
-- API docs: `http://127.0.0.1:8000/docs`
+## Running Locally
 
-From there you can:
+### Prerequisites
+- Python 3.12+
+- PostgreSQL 16 with pgvector extension
+- OpenAI API key
 
-- **List messages for a chat**:  
-  - Endpoint: `POST /chat/get_messages`  
-  - Example body:
-    ```json
-    {
-      "chat_id": 1
-    }
-    ```
-
-- **Ask a question in a chat (orchestrator picks specialist, or you force one)**:  
-  - Endpoint: `POST /chat/answer`  
-  - Example body (`agent` defaults to `auto`; use `kb`, `course`, or `general` to skip routing):
-    ```json
-    {
-      "chat_id": 1,
-      "question": "What is the add/drop policy?",
-      "agent": "auto",
-      "syllabus_text": null
-    }
-    ```
-  - Response includes `agent_used`: `general`, `kb`, or `course`.
-
-- **Delete a chat**:  
-  - Endpoint: `DELETE /chat/delete?chat_id=1` (e.g. `DELETE /chat/delete?chat_id=1`)
-
-### How to run (Frontend - Streamlit UI)
-
-Start the Streamlit web interface (from project root, venv activated):
+### Option 1: Docker Compose (recommended)
 
 ```bash
+cp .env.example .env
+# Edit .env and set OPENAI_API_KEY=sk-...
+
+docker compose up --build
+```
+
+- Frontend: http://localhost:8501
+- Backend API docs: http://localhost:8000/docs
+
+### Option 2: Manual Setup
+
+```bash
+# Create virtual environment
+python -m venv .venv
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set environment variables
+cp .env.example .env
+# Edit .env: set OPENAI_API_KEY and DATABASE_URL
+# Example: DATABASE_URL=postgresql://postgres:postgres@localhost:5432/aua_agent
+
+# Run database migrations
+alembic upgrade head
+
+# Start backend (terminal 1)
+uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+
+# Start frontend (terminal 2)
 streamlit run frontend/app.py
 ```
 
-The UI will open automatically in your browser at `http://127.0.0.1:8501`.
+- Frontend: http://localhost:8501
+- Backend API docs: http://localhost:8000/docs
 
-**Features:**
-- 💬 **Chat Interface**: each turn is routed automatically; the assistant reply **streams** token-by-token (Streamlit `write_stream` + LangGraph `stream_mode=["messages","updates"]`)
-- 📚 **Knowledge Base**: AUA policy PDFs in `aua_policy_pdfs/` are ingested into PostgreSQL on API startup; you can also upload `.txt` files via the UI or API
-- 📝 **Chat History**: View and manage multiple chat sessions
-- 🔍 **Smart Search**: The agent uses vector search over embedded policy chunks when answering policy-related questions
+### Environment Variables
 
+| Variable              | Required | Default | Description                        |
+|-----------------------|----------|---------|------------------------------------|
+| `OPENAI_API_KEY`      | Yes      | —       | OpenAI API key                     |
+| `DATABASE_URL`        | Yes      | —       | PostgreSQL connection string       |
+| `EMBEDDING_DIMENSION` | No       | `1536`  | Embedding vector dimension         |
+| `DEFAULT_USER_ID`     | No       | `1`     | Default user ID                    |
+
+---
+
+## Running on AWS (EKS)
+
+### Prerequisites
+- AWS CLI configured (`aws configure`)
+- Terraform >= 1.5
+- kubectl
+- Docker with buildx
+- Docker Hub account
+
+### 1. Provision Infrastructure
+
+```bash
+cd infrastructure
+terraform init
+terraform plan
+terraform apply
+```
+
+This creates:
+- VPC with 2 public + 2 private subnets
+- EKS cluster (`capstone-eks`) in `eu-central-1`
+- Worker node group (t3.small)
+- Single NAT gateway (cost-optimized, non-redundant)
+- IAM roles for cluster, nodes, and load balancer controller
+- OIDC provider for IRSA
+
+### 2. Connect kubectl
+
+```bash
+aws eks update-kubeconfig --region eu-central-1 --name capstone-eks
+kubectl get nodes   # Verify connection
+```
+
+### 3. Install EBS CSI Driver
+
+Required for persistent volumes (PostgreSQL data):
+
+```bash
+# Create IAM role for CSI driver (uses OIDC/IRSA)
+# Then install as EKS managed addon:
+aws eks create-addon --cluster-name capstone-eks \
+  --addon-name aws-ebs-csi-driver \
+  --service-account-role-arn arn:aws:iam::<ACCOUNT_ID>:role/capstone-eks-ebs-csi-role \
+  --region eu-central-1
+
+# On small nodes, scale controller to 1 to save memory:
+kubectl scale deployment ebs-csi-controller -n kube-system --replicas=1
+```
+
+### 4. Build and Push Docker Images
+
+```bash
+# Login to Docker Hub
+docker login
+
+# Build for amd64 (EKS node architecture) and push
+docker buildx build --platform linux/amd64 -f backend/Dockerfile \
+  -t <dockerhub-user>/capstone-backend:latest --push .
+
+docker buildx build --platform linux/amd64 -f frontend/Dockerfile \
+  -t <dockerhub-user>/capstone-frontend:latest --push .
+```
+
+### 5. Deploy to Kubernetes
+
+```bash
+# Create namespace and secrets
+kubectl apply -f infrastructure/k8s/namespace.yaml
+
+kubectl create secret generic app-secrets -n capstone \
+  --from-literal=OPENAI_API_KEY='sk-...' \
+  --from-literal=POSTGRES_PASSWORD='postgres'
+
+# Deploy services
+kubectl apply -f infrastructure/k8s/postgres.yaml
+kubectl apply -f infrastructure/k8s/backend.yaml
+kubectl apply -f infrastructure/k8s/frontend.yaml
+
+# Check status
+kubectl get pods -n capstone
+
+# Get external URL
+kubectl get svc frontend -n capstone \
+  -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'
+```
+
+### 6. Kubernetes Manifest Summary
+
+| Manifest          | Resource                                            |
+|-------------------|-----------------------------------------------------|
+| `namespace.yaml`  | `capstone` namespace                                |
+| `secrets.yaml`    | OpenAI API key + Postgres password                  |
+| `postgres.yaml`   | StatefulSet + headless Service + 5Gi PVC            |
+| `backend.yaml`    | Deployment + ClusterIP Service (port 8000)          |
+| `frontend.yaml`   | Deployment + LoadBalancer Service (port 80 → 8501)  |
+
+---
+
+## CI/CD
+
+GitHub Actions pipelines in `.github/workflows/`:
+
+### CI (`ci.yml`) — PRs and pushes to main
+- Lint with `ruff check` and `ruff format --check`
+- Run tests with pgvector service container
+- Build Docker images (verify compilation)
+
+### CD (`cd.yml`) — pushes to main
+- Build and push images to Docker Hub (tagged `latest` + commit SHA)
+- Deploy to EKS: apply manifests, update image tags, wait for rollout
+
+### Required GitHub Secrets
+
+| Secret                  | Description                    |
+|-------------------------|--------------------------------|
+| `DOCKERHUB_USERNAME`    | Docker Hub username            |
+| `DOCKERHUB_TOKEN`       | Docker Hub access token (R+W)  |
+| `AWS_ACCESS_KEY_ID`     | AWS access key                 |
+| `AWS_SECRET_ACCESS_KEY` | AWS secret key                 |
+| `OPENAI_API_KEY`        | OpenAI API key (for tests)     |
+
+---
+
+## API Endpoints
+
+| Method   | Endpoint              | Description                          |
+|----------|-----------------------|--------------------------------------|
+| `POST`   | `/chat/answer`        | Ask a question (auto-routes agent)   |
+| `POST`   | `/chat/get_messages`  | List messages for a chat             |
+| `DELETE` | `/chat/delete`        | Delete a chat session                |
+| `GET`    | `/docs`               | Swagger UI                           |
+
+### Tear Down
+
+```bash
+# Delete K8s resources
+kubectl delete namespace capstone
+
+# Destroy AWS infrastructure
+cd infrastructure
+terraform destroy
+```
