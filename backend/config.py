@@ -21,5 +21,5 @@ DEFAULT_USER_ID: int = int(os.getenv("DEFAULT_USER_ID", "1"))
 
 # RAG evaluation flag. Default False — eval job is skipped.
 # Flip to True here (or set RUN_RAG_EVAL=true in the environment) to enable.
-RUN_RAG_EVAL: bool = _env_bool("RUN_RAG_EVAL", True)
+RUN_RAG_EVAL: bool = _env_bool("RUN_RAG_EVAL", False)
 GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "") or os.getenv("GOOGLE_API_KEY", "")

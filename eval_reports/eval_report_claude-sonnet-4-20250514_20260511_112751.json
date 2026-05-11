@@ -1,0 +1,330 @@
+{
+  "timestamp": "2026-05-11T11:27:51.882105+00:00",
+  "model": "claude-sonnet-4-20250514",
+  "judge_model": "gemini-2.5-flash",
+  "total_queries": 3,
+  "aggregate": {
+    "citation_accuracy": {
+      "mean": 0,
+      "median": 0,
+      "min": 0,
+      "max": 0,
+      "pass_rate": 0.0,
+      "count": 3
+    },
+    "top1_accuracy": {
+      "mean": 2.333,
+      "median": 3,
+      "min": 1,
+      "max": 3,
+      "pass_rate": 0.667,
+      "count": 3
+    },
+    "hallucination": {
+      "mean": 1.667,
+      "median": 0,
+      "min": 0,
+      "max": 5,
+      "pass_rate": 0.333,
+      "count": 3
+    },
+    "completeness": {
+      "mean": 2,
+      "median": 1,
+      "min": 0,
+      "max": 5,
+      "pass_rate": 0.333,
+      "count": 3
+    },
+    "relevance": {
+      "mean": 4.333,
+      "median": 4,
+      "min": 4,
+      "max": 5,
+      "pass_rate": 1.0,
+      "count": 3
+    },
+    "overall_mean": 2.067,
+    "avg_latency_seconds": 27.751,
+    "rag_error_count": 0
+  },
+  "by_category": {
+    "cross-policy-governance": {
+      "citation_accuracy": {
+        "mean": 0,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "pass_rate": 0.0,
+        "count": 3
+      },
+      "top1_accuracy": {
+        "mean": 2.333,
+        "median": 3,
+        "min": 1,
+        "max": 3,
+        "pass_rate": 0.667,
+        "count": 3
+      },
+      "hallucination": {
+        "mean": 1.667,
+        "median": 0,
+        "min": 0,
+        "max": 5,
+        "pass_rate": 0.333,
+        "count": 3
+      },
+      "completeness": {
+        "mean": 2,
+        "median": 1,
+        "min": 0,
+        "max": 5,
+        "pass_rate": 0.333,
+        "count": 3
+      },
+      "relevance": {
+        "mean": 4.333,
+        "median": 4,
+        "min": 4,
+        "max": 5,
+        "pass_rate": 1.0,
+        "count": 3
+      },
+      "count": 3
+    }
+  },
+  "per_query": [
+    {
+      "test_case": {
+        "id": 1,
+        "category": "cross-policy-governance",
+        "query": "We are creating a new Vice President of Research position. Which existing policies govern research oversight and reporting lines, and what would need to be updated so that researchers and research center directors now report to the VP of Research?",
+        "expected_relevant_policies": [
+          "Research Ethics and IRB.pdf",
+          "Shared Research Facilities.pdf",
+          "Intellectual Property and Commercialization.pdf",
+          "Appointment, Retention, and Promotion and Faculty Titles.pdf",
+          "Policy on Policies.pdf"
+        ],
+        "expected_topics": [
+          "research oversight structure",
+          "IRB reporting lines",
+          "intellectual property governance",
+          "faculty title and appointment procedures",
+          "policy modification and approval process"
+        ]
+      },
+      "rag_result": {
+        "query": "We are creating a new Vice President of Research position. Which existing policies govern research oversight and reporting lines, and what would need to be updated so that researchers and research center directors now report to the VP of Research?",
+        "chunks": [],
+        "answer": "I'll search the AUA policy knowledge base to find information about research oversight, reporting structures, and policies that would need to be updated for creating a new Vice President of Research position.Let me try a more specific search for research policies and administrative structure:Let me search for organizational structure and administrative reporting:Let me try searching for faculty policies and academic governance:## Research Oversight and Reporting Structure Analysis\n\nUnfortunately, I'm unable to retrieve specific information from the AUA policy knowledge base about current research oversight and reporting structures. This could indicate that:\n\n- The policy documents may not be currently loaded in the system\n- The relevant policies may use different terminology than my search terms\n- Research governance policies may be distributed across multiple documents\n\n## Recommendations for Policy Review\n\nTo properly establish a **Vice President of Research** position and update reporting lines, you should review these typical policy areas:\n\n### **Key Policy Documents to Examine:**\n\n- **Faculty Handbook** - likely contains current research responsibilities and reporting structures\n- **Organizational Chart/Administrative Structure** - shows current reporting lines\n- **Research Policy Manual** - if it exists, would detail research oversight procedures\n- **Academic Affairs Policies** - may include research center governance\n- **Job Descriptions** - for current positions that oversee research activities\n\n### **Typical Areas Requiring Updates:**\n\n- **Reporting Structure Changes**\n  - Research center director reporting lines\n  - Faculty research oversight responsibilities\n  - Budget and resource allocation authority\n\n- **Administrative Responsibilities**\n  - Research compliance oversight\n  - Grant administration\n  - Research ethics and integrity policies\n\n- **Governance Updates**\n  - Committee structures involving research\n  - Decision-making authority for research initiatives\n  - Performance evaluation processes\n\nI recommend manually reviewing the current AUA policy documents to identify specific policies that reference research oversight and administrative reporting structures that would need modification.",
+        "agent_used": "kb",
+        "latency_seconds": 36.919503927230835,
+        "error": null
+      },
+      "scores": {
+        "citation_accuracy": {
+          "score": 0,
+          "cited_documents": [],
+          "correctly_cited": [],
+          "incorrectly_cited": [],
+          "missing_expected": [
+            "Research Ethics and IRB.pdf",
+            "Shared Research Facilities.pdf",
+            "Intellectual Property and Commercialization.pdf",
+            "Appointment, Retention, and Promotion and Faculty Titles.pdf",
+            "Policy on Policies.pdf"
+          ],
+          "explanation": "The system explicitly stated it could not retrieve information and therefore did not cite any documents, resulting in all expected citations being missing."
+        },
+        "top1_accuracy": {
+          "score": 3,
+          "top1_relevant_to_query": false,
+          "answer_uses_top1_faithfully": false,
+          "explanation": "The top-1 retrieved chunk was empty, making it irrelevant, but the answer still provided helpful general guidance for the user's query."
+        },
+        "hallucination": {
+          "score": 0,
+          "hallucinated_claims": [
+            "AUA has a Faculty Handbook that contains current research responsibilities and reporting structures.",
+            "AUA has an Organizational Chart/Administrative Structure that shows current reporting lines.",
+            "AUA has a Research Policy Manual that would detail research oversight procedures.",
+            "AUA has Academic Affairs Policies that may include research center governance.",
+            "AUA has Job Descriptions for current positions that oversee research activities."
+          ],
+          "explanation": "The system hallucinates the existence and content of several specific AUA policy documents, as no chunks were retrieved to support these claims."
+        },
+        "completeness": {
+          "score": 1,
+          "topics_covered": [
+            "research oversight structure"
+          ],
+          "topics_missed": [
+            "IRB reporting lines",
+            "intellectual property governance",
+            "faculty title and appointment procedures",
+            "policy modification and approval process"
+          ],
+          "explanation": "The answer substantively addresses research oversight structure by outlining where to find relevant policies and what aspects would need updating, but misses specific details on IRB reporting, intellectual property, faculty appointment procedures, and the policy modification process."
+        },
+        "relevance": {
+          "score": 4,
+          "explanation": "The answer directly addresses the user's query by stating it cannot find specific AUA policies but then provides relevant general recommendations for policy review and areas requiring updates, which is on-topic for the second part of the question."
+        }
+      }
+    },
+    {
+      "test_case": {
+        "id": 2,
+        "category": "cross-policy-governance",
+        "query": "AUA wants to establish a University Ombudsperson role. Which existing AUA policies cover grievance reporting, whistleblowing, and conflict resolution, and how would this new role interact with them?",
+        "expected_relevant_policies": [
+          "Whistleblower_ Responsible and Ethical Conduct at AUA.pdf",
+          "Conflict of Interest for Administration, Faculty and Staff.pdf",
+          "Sexual Misconduct.pdf",
+          "Rewards and Disciplinary Actions.pdf",
+          "Policy on Policies.pdf"
+        ],
+        "expected_topics": [
+          "whistleblower procedures",
+          "grievance and complaint channels",
+          "disciplinary process",
+          "conflict resolution mechanisms",
+          "policy creation requirements"
+        ]
+      },
+      "rag_result": {
+        "query": "AUA wants to establish a University Ombudsperson role. Which existing AUA policies cover grievance reporting, whistleblowing, and conflict resolution, and how would this new role interact with them?",
+        "chunks": [],
+        "answer": "I'll search the AUA policy knowledge base to find information about existing grievance reporting, whistleblowing, and conflict resolution policies that would be relevant to establishing a University Ombudsperson role.Let me try a more specific search for grievance and complaint procedures:Let me search for disciplinary and conduct policies that might contain grievance procedures:Let me try searching for HR-related policies that might cover employee grievances:Let me search for any policies related to reporting mechanisms or ethical concerns:## Search Results\n\nUnfortunately, I was unable to locate specific policies in the AUA knowledge base that directly address:\n\n- **Grievance reporting procedures**\n- **Whistleblowing mechanisms** \n- **Conflict resolution processes**\n- **Complaint handling procedures**\n\n## Potential Reasons for Limited Results\n\nThis could indicate that:\n\n1. **Policy Gap**: AUA may not have comprehensive, centralized policies covering these areas\n2. **Distributed Policies**: These procedures might be embedded within other policy documents (academic, HR, student conduct) that weren't captured in my searches\n3. **Knowledge Base Limitations**: The current policy collection may not include all relevant documents\n\n## Recommendations for Establishing an Ombudsperson Role\n\nGiven the apparent policy gap, establishing a University Ombudsperson could be particularly valuable for AUA. Here's how this role could be structured:\n\n### **Primary Functions**\n- Provide **confidential consultation** for students, faculty, and staff\n- Facilitate **informal conflict resolution**\n- Serve as an **alternative reporting channel** for concerns\n- Offer **neutral mediation** services\n- Make **systemic recommendations** to university leadership\n\n### **Integration with Existing Structure**\nThe Ombudsperson role should:\n- **Complement** (not replace) formal disciplinary and grievance procedures\n- Provide **early intervention** before issues escalate to formal complaints\n- Maintain **independence** from administrative hierarchy\n- Report **trends and patterns** to help prevent future conflicts\n\n### **Next Steps**\nI recommend conducting a comprehensive policy audit to identify any existing grievance, complaint, or conflict resolution procedures that may be embedded in other policy documents, which would help inform how the Ombudsperson role should be designed and integrated.",
+        "agent_used": "kb",
+        "latency_seconds": 24.757028102874756,
+        "error": null
+      },
+      "scores": {
+        "citation_accuracy": {
+          "score": 0,
+          "cited_documents": [],
+          "correctly_cited": [],
+          "incorrectly_cited": [],
+          "missing_expected": [
+            "Whistleblower_ Responsible and Ethical Conduct at AUA.pdf",
+            "Conflict of Interest for Administration, Faculty and Staff.pdf",
+            "Sexual Misconduct.pdf",
+            "Rewards and Disciplinary Actions.pdf",
+            "Policy on Policies.pdf"
+          ],
+          "explanation": "The system failed to cite any documents and incorrectly stated that no policies covering the requested topics could be found, despite relevant policies being in the gold reference."
+        },
+        "top1_accuracy": {
+          "score": 3,
+          "top1_relevant_to_query": false,
+          "answer_uses_top1_faithfully": true,
+          "explanation": "The top-1 chunk was empty, indicating no relevant information was retrieved, but the answer correctly identified a policy gap and provided helpful recommendations for the Ombudsperson role."
+        },
+        "hallucination": {
+          "score": 5,
+          "hallucinated_claims": [],
+          "explanation": "The system accurately reports that it was unable to locate any specific policies in the knowledge base, which is consistent with the 'no chunks retrieved' input. All subsequent information is presented as potential reasons for this lack of information or as recommendations for a new role, not as existing AUA policies or facts."
+        },
+        "completeness": {
+          "score": 5,
+          "topics_covered": [
+            "whistleblower procedures",
+            "grievance and complaint channels",
+            "disciplinary process",
+            "conflict resolution mechanisms",
+            "policy creation requirements"
+          ],
+          "topics_missed": [],
+          "explanation": "The answer addresses the existence (or lack thereof) of policies for each topic and then details how the new Ombudsperson role would interact with them, including recommendations for its establishment and integration."
+        },
+        "relevance": {
+          "score": 5,
+          "explanation": "The answer directly addresses both parts of the query by stating no specific policies were found and then explaining how the new role would interact with the *types* of procedures mentioned, given the policy gap."
+        }
+      }
+    },
+    {
+      "test_case": {
+        "id": 3,
+        "category": "cross-policy-governance",
+        "query": "If AUA appoints a new Chief Compliance Officer, which policies define compliance responsibilities today (audit, IRB, anti-trafficking, conflict of interest) and what reporting structures would need realignment?",
+        "expected_relevant_policies": [
+          "External Audit Review.pdf",
+          "Anti-Trafficking Compliance.pdf",
+          "Conflict of Interest for Administration, Faculty and Staff.pdf",
+          "Research Ethics and IRB.pdf",
+          "AUAC Document Retention_Destruction Policy.pdf"
+        ],
+        "expected_topics": [
+          "external audit procedures",
+          "anti-trafficking obligations",
+          "conflict of interest disclosures",
+          "research compliance and IRB",
+          "document retention requirements"
+        ]
+      },
+      "rag_result": {
+        "query": "If AUA appoints a new Chief Compliance Officer, which policies define compliance responsibilities today (audit, IRB, anti-trafficking, conflict of interest) and what reporting structures would need realignment?",
+        "chunks": [],
+        "answer": "I'll search the AUA policy knowledge base to find information about compliance responsibilities and reporting structures that would be relevant for a Chief Compliance Officer position.Let me try searching for specific compliance areas separately to get a better understanding of current policies:## Current Status of AUA Policy Knowledge Base\n\nI'm unable to retrieve specific information about compliance responsibilities and reporting structures from the AUA policy knowledge base at this time. The search results indicate that either:\n\n- The policy documents may not be currently loaded in the system\n- The specific compliance policies you're asking about may not be digitized or included in the current collection\n- The search terms may not match the exact language used in the policy documents\n\n## Recommended Next Steps\n\nTo properly answer your question about **Chief Compliance Officer responsibilities** and **reporting structure realignment**, I would need access to:\n\n### **Key Policy Documents to Review:**\n- **Audit and Internal Controls Policy**\n- **Institutional Review Board (IRB) Charter and Procedures**\n- **Anti-Human Trafficking Policy**\n- **Conflict of Interest Policy**\n- **Organizational Chart and Reporting Structure Documents**\n- **Administrative Policies defining current compliance roles**\n\n### **Information Needed:**\n- Current compliance responsibilities distributed across different departments\n- Existing reporting lines for audit, research compliance, and ethics oversight\n- Any existing compliance officer or similar roles\n- Board and senior leadership reporting requirements\n\nI recommend contacting AUA's **Administration Office** or **Human Resources** directly to obtain the current policy documents that would define these compliance responsibilities and reporting structures for proper analysis of what would need realignment with a new Chief Compliance Officer appointment.",
+        "agent_used": "kb",
+        "latency_seconds": 21.575799226760864,
+        "error": null
+      },
+      "scores": {
+        "citation_accuracy": {
+          "score": 0,
+          "cited_documents": [],
+          "correctly_cited": [],
+          "incorrectly_cited": [],
+          "missing_expected": [
+            "External Audit Review.pdf",
+            "Anti-Trafficking Compliance.pdf",
+            "Conflict of Interest for Administration, Faculty and Staff.pdf",
+            "Research Ethics and IRB.pdf",
+            "AUAC Document Retention_Destruction Policy.pdf"
+          ],
+          "explanation": "The system explicitly stated it could not retrieve information and therefore did not cite any documents, leading to all expected citations being missing."
+        },
+        "top1_accuracy": {
+          "score": 1,
+          "top1_relevant_to_query": false,
+          "answer_uses_top1_faithfully": true,
+          "explanation": "The top-1 retrieved chunk was empty, making it irrelevant to the query; the answer faithfully reflects this by stating its inability to retrieve information, but consequently fails to address the user's specific request."
+        },
+        "hallucination": {
+          "score": 0,
+          "hallucinated_claims": [
+            "Audit and Internal Controls Policy",
+            "Institutional Review Board (IRB) Charter and Procedures",
+            "Anti-Human Trafficking Policy",
+            "Conflict of Interest Policy",
+            "Organizational Chart and Reporting Structure Documents",
+            "Administrative Policies defining current compliance roles",
+            "AUA's Administration Office",
+            "Human Resources"
+          ],
+          "explanation": "All specific policy document names and office names mentioned in the 'Recommended Next Steps' section are not supported by the empty retrieved chunks."
+        },
+        "completeness": {
+          "score": 0,
+          "topics_covered": [],
+          "topics_missed": [
+            "external audit procedures",
+            "anti-trafficking obligations",
+            "conflict of interest disclosures",
+            "research compliance and IRB",
+            "document retention requirements"
+          ],
+          "explanation": "The answer explicitly states it is unable to retrieve specific information and therefore does not substantively address any of the expected topics."
+        },
+        "relevance": {
+          "score": 4,
+          "explanation": "The answer is on-topic as it acknowledges the specific policies and the core request, but it cannot directly address the question due to a lack of information, instead explaining what would be needed to answer it."
+        }
+      }
+    }
+  ]
+}
