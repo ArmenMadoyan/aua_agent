@@ -3,6 +3,13 @@ name: CD
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '.claude/**'
+      - 'paper/**'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.env.example'
+      - '*.md'
 
 jobs:
   build-and-push:

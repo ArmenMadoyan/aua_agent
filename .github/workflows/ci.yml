@@ -3,8 +3,22 @@ name: CI
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '.claude/**'
+      - 'paper/**'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.env.example'
+      - '*.md'
   push:
     branches: [main]
+    paths-ignore:
+      - '.claude/**'
+      - 'paper/**'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.env.example'
+      - '*.md'
 
 jobs:
   lint-backend:
