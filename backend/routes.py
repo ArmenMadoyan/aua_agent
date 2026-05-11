@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
@@ -104,7 +105,7 @@ async def stream_chat_answer(
                 attachments=attachments,
                 reference_documents=ref_parts,
             ):
-                yield {"data": token}
+                yield {"data": json.dumps(token)}
         except Exception as e:
             logger.exception("Error in /chat/stream: %s", e)
             yield {"data": f"[ERROR] {e}"}

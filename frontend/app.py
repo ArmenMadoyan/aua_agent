@@ -1,4 +1,5 @@
 import base64
+import json
 import os
 import re
 import time
@@ -14,6 +15,70 @@ st.set_page_config(
     page_icon="💬",
     layout="wide",
     initial_sidebar_state="expanded",
+)
+
+st.markdown(
+    """
+    <style>
+    /* ── assistant message styling ─────────────────────────── */
+    [data-testid="stChatMessage"] table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.75em 0;
+        font-size: 0.92em;
+    }
+    [data-testid="stChatMessage"] th,
+    [data-testid="stChatMessage"] td {
+        border: 1px solid rgba(128, 128, 128, 0.3);
+        padding: 6px 10px;
+        text-align: left;
+    }
+    [data-testid="stChatMessage"] th {
+        background: rgba(128, 128, 128, 0.1);
+        font-weight: 600;
+    }
+    [data-testid="stChatMessage"] blockquote {
+        border-left: 3px solid #4A90D9;
+        margin: 0.75em 0;
+        padding: 0.4em 1em;
+        background: rgba(74, 144, 217, 0.06);
+        border-radius: 0 6px 6px 0;
+    }
+    [data-testid="stChatMessage"] code {
+        background: rgba(128, 128, 128, 0.12);
+        padding: 2px 5px;
+        border-radius: 4px;
+        font-size: 0.88em;
+    }
+    [data-testid="stChatMessage"] pre {
+        background: rgba(128, 128, 128, 0.08);
+        padding: 12px;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+    [data-testid="stChatMessage"] h2 {
+        font-size: 1.2em;
+        margin-top: 1em;
+        margin-bottom: 0.3em;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+        padding-bottom: 0.2em;
+    }
+    [data-testid="stChatMessage"] h3 {
+        font-size: 1.05em;
+        margin-top: 0.8em;
+        margin-bottom: 0.2em;
+    }
+    [data-testid="stChatMessage"] ul,
+    [data-testid="stChatMessage"] ol {
+        margin: 0.4em 0;
+        padding-left: 1.5em;
+    }
+    [data-testid="stChatMessage"] li {
+        margin-bottom: 0.25em;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 if "current_chat_id" not in st.session_state:
@@ -223,9 +288,18 @@ if prompt := st.chat_input("Ask a question..."):
                         placeholder = st.empty()
                         for line in response.iter_lines():
                             if line.startswith("data: "):
-                                token = line[6:]
+                                raw = line[6:]
+                                try:
+                                    token = json.loads(raw)
+                                except (json.JSONDecodeError, TypeError):
+                                    token = raw
                                 collected_tokens.append(token)
-                                placeholder.markdown("".join(collected_tokens))
+                                placeholder.markdown(
+                                    "".join(collected_tokens) + " ▌"
+                                )
+                        # Final render without cursor
+                        if collected_tokens:
+                            placeholder.markdown("".join(collected_tokens))
             except httpx.RemoteProtocolError:
                 pass
 
@@ -241,7 +315,7 @@ if prompt := st.chat_input("Ask a question..."):
             if artifact:
                 name = artifact.group(1)
                 download_url = f"{API_BASE}/course/artifacts/{name}"
-                st.markdown(f"[Download {name}]({download_url})")
+                st.markdown(f"📥 [**Download {name}**]({download_url})")
 
             st.session_state.messages.append({"role": "assistant", "content": reply})
 

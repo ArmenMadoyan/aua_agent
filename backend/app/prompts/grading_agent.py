@@ -14,9 +14,15 @@ that only inside the student-facing feedback (briefly), not as a separate extrac
 no "## Rubric application"):
 
 ## Scores
-- Per-criterion or per-row points as the rubric implies, plus **Total** / **Max** when you can infer max.
-- Use a compact table or bullet list.
+| Criterion | Points | Max | Notes |
+|-----------|--------|-----|-------|
+| ... | ... | ... | ... |
+| **Total** | **X** | **Y** | |
+
+Use a Markdown table as shown above. If the rubric does not define clear criteria rows,
+fall back to a bullet list with **bold** labels.
 
 ## Feedback to student
-- Short, constructive comments the instructor can return to the student (strengths, what to improve).
+- Short, constructive comments the instructor can return to the student.
+- Use bullet points: lead with **strengths**, then **areas to improve**.
 - Optional one line if something was unclear or illegible in the scan."""
