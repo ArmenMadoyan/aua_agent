@@ -1,14 +1,21 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from backend.ai.agents import init_checkpointer, _build_agents
-from backend.ai.course_output import GENERATED_COURSE_DIR, ensure_generated_dir
-from backend.ai.vector_store import load_existing_files
+from backend.app.main_init import init_checkpointer, get_checkpointer
+from backend.app.orchestrator import init_agents
+from backend.app.agents.course_agent import GENERATED_COURSE_DIR, ensure_generated_dir
+from backend.app.kb_rag import load_existing_files
 from backend.config import DATABASE_URL
 from backend.db import close_db, init_db, run_migrations
 from backend.routes import router
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(name)s] %(levelname)s %(message)s",
+)
 
 
 @asynccontextmanager
@@ -16,8 +23,8 @@ async def lifespan(app: FastAPI):
     await init_db(DATABASE_URL)
     run_migrations()
     ensure_generated_dir()
-    init_checkpointer()
-    _build_agents()
+    checkpointer = init_checkpointer()
+    init_agents(checkpointer=checkpointer)
     load_existing_files()
     yield
     await close_db()

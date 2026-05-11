@@ -8,13 +8,13 @@ from typing import Any
 from sqlalchemy import delete, func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.ai.document_text import merge_reference_block_into_last_user
-from backend.ai.orchestrator import (
+from backend.app.document_text import merge_reference_block_into_last_user
+from backend.app.orchestrator import (
     OrchestratorResult,
     iter_chat_turn_tokens,
     run_chat_turn,
 )
-from backend.ai.vector_store import (
+from backend.app.kb_rag import (
     add_document as vs_add_document,
     delete_document as vs_delete_document,
     document_exists as vs_document_exists,
