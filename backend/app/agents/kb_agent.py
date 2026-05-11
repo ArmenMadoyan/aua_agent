@@ -34,7 +34,9 @@ class KBAgent:
         )
     )
     def retrieve_from_knowledge_base(question: str) -> str:
-        logger.info("retrieve_from_knowledge_base called with query: %s", question[:120])
+        logger.info(
+            "retrieve_from_knowledge_base called with query: %s", question[:120]
+        )
         results = search(query=question, k=5)
 
         if not results:

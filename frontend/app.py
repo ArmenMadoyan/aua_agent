@@ -294,9 +294,7 @@ if prompt := st.chat_input("Ask a question..."):
                                 except (json.JSONDecodeError, TypeError):
                                     token = raw
                                 collected_tokens.append(token)
-                                placeholder.markdown(
-                                    "".join(collected_tokens) + " ▌"
-                                )
+                                placeholder.markdown("".join(collected_tokens) + " ▌")
                         # Final render without cursor
                         if collected_tokens:
                             placeholder.markdown("".join(collected_tokens))

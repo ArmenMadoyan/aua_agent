@@ -20,7 +20,9 @@ class GradingAgent:
     @staticmethod
     def build_lc_messages(messages: list[dict[str, Any]]) -> list:
         """Turn chat dicts (optional ``attachments`` on user turns) into LangChain messages."""
-        logger.info("Building grading LangChain messages from %d chat messages", len(messages))
+        logger.info(
+            "Building grading LangChain messages from %d chat messages", len(messages)
+        )
         last_user_i: int | None = None
         for i in range(len(messages) - 1, -1, -1):
             if messages[i].get("role") == "user":
