@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
-from backend.app.main_init import init_checkpointer, get_checkpointer
+from backend.app.main_init import init_checkpointer
 from backend.app.orchestrator import init_agents
 from backend.app.agents.course_agent import GENERATED_COURSE_DIR, ensure_generated_dir
 from backend.app.kb_rag import load_existing_files
