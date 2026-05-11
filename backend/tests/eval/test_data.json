@@ -1,0 +1,956 @@
+{
+  "version": "1.0",
+  "description": "50 complex multi-policy AUA queries for LLM-as-judge RAG evaluation. Each query intentionally spans 2-5 policies to stress retrieval and synthesis.",
+  "queries": [
+    {
+      "id": 1,
+      "category": "cross-policy-governance",
+      "query": "We are creating a new Vice President of Research position. Which existing policies govern research oversight and reporting lines, and what would need to be updated so that researchers and research center directors now report to the VP of Research?",
+      "expected_relevant_policies": [
+        "Research Ethics and IRB.pdf",
+        "Shared Research Facilities.pdf",
+        "Intellectual Property and Commercialization.pdf",
+        "Appointment, Retention, and Promotion and Faculty Titles.pdf",
+        "Policy on Policies.pdf"
+      ],
+      "expected_topics": [
+        "research oversight structure",
+        "IRB reporting lines",
+        "intellectual property governance",
+        "faculty title and appointment procedures",
+        "policy modification and approval process"
+      ]
+    },
+    {
+      "id": 2,
+      "category": "cross-policy-governance",
+      "query": "AUA wants to establish a University Ombudsperson role. Which existing AUA policies cover grievance reporting, whistleblowing, and conflict resolution, and how would this new role interact with them?",
+      "expected_relevant_policies": [
+        "Whistleblower_ Responsible and Ethical Conduct at AUA.pdf",
+        "Conflict of Interest for Administration, Faculty and Staff.pdf",
+        "Sexual Misconduct.pdf",
+        "Rewards and Disciplinary Actions.pdf",
+        "Policy on Policies.pdf"
+      ],
+      "expected_topics": [
+        "whistleblower procedures",
+        "grievance and complaint channels",
+        "disciplinary process",
+        "conflict resolution mechanisms",
+        "policy creation requirements"
+      ]
+    },
+    {
+      "id": 3,
+      "category": "cross-policy-governance",
+      "query": "If AUA appoints a new Chief Compliance Officer, which policies define compliance responsibilities today (audit, IRB, anti-trafficking, conflict of interest) and what reporting structures would need realignment?",
+      "expected_relevant_policies": [
+        "External Audit Review.pdf",
+        "Anti-Trafficking Compliance.pdf",
+        "Conflict of Interest for Administration, Faculty and Staff.pdf",
+        "Research Ethics and IRB.pdf",
+        "AUAC Document Retention_Destruction Policy.pdf"
+      ],
+      "expected_topics": [
+        "external audit procedures",
+        "anti-trafficking obligations",
+        "conflict of interest disclosures",
+        "research compliance and IRB",
+        "document retention requirements"
+      ]
+    },
+    {
+      "id": 4,
+      "category": "cross-policy-governance",
+      "query": "If we replace 'Provost' with a new 'Chief Academic Officer' title across AUA, which policies reference the Provost role for academic decision-making, faculty appointments, and curriculum approval that would need updating?",
+      "expected_relevant_policies": [
+        "Appointment, Retention, and Promotion and Faculty Titles.pdf",
+        "Course Proposal and Modification.pdf",
+        "Annual Review of Executive Leaders and Senior Academic Leaders at American University of Armenia (AUA).pdf",
+        "Program Chair Appointment.pdf",
+        "Statement on Faculty Senate.pdf"
+      ],
+      "expected_topics": [
+        "faculty appointment authority",
+        "course and curriculum approval",
+        "executive leadership review",
+        "program chair selection",
+        "faculty senate interaction"
+      ]
+    },
+    {
+      "id": 5,
+      "category": "cross-policy-governance",
+      "query": "AUA is forming a new Director of Diversity, Equity, and Inclusion position. Which existing policies address non-discrimination, equal opportunity, sexual misconduct, and student/staff conduct that this role would oversee or interact with?",
+      "expected_relevant_policies": [
+        "Non-Discrimination.pdf",
+        "Equal Opportunity in Employment.pdf",
+        "Sexual Misconduct.pdf",
+        "Student Code of Conduct.pdf",
+        "Staff Conduct.pdf"
+      ],
+      "expected_topics": [
+        "non-discrimination requirements",
+        "equal employment opportunity",
+        "sexual misconduct reporting",
+        "student conduct standards",
+        "staff conduct expectations"
+      ]
+    },
+    {
+      "id": 6,
+      "category": "cross-policy-governance",
+      "query": "A new Vice President of Finance is being hired. Which policies define financial signature authority, budget development, and audit oversight today, and what would need to change to centralize them under the VP Finance?",
+      "expected_relevant_policies": [
+        "Signature Authority.pdf",
+        "Operational Budget Development Process.pdf",
+        "External Audit Review.pdf",
+        "Financial Services General Provisions.pdf",
+        "Purchasing of Goods and Services.pdf"
+      ],
+      "expected_topics": [
+        "signature authority hierarchy",
+        "budget development process",
+        "audit oversight",
+        "financial services authority",
+        "purchasing approvals"
+      ]
+    },
+    {
+      "id": 7,
+      "category": "cross-policy-governance",
+      "query": "AUA is creating a centralized Title IX Office. Which existing policies handle sexual misconduct, non-discrimination, student conduct, and reporting/investigation procedures that this office would consolidate?",
+      "expected_relevant_policies": [
+        "Sexual Misconduct.pdf",
+        "Non-Discrimination.pdf",
+        "Student Code of Conduct.pdf",
+        "Whistleblower_ Responsible and Ethical Conduct at AUA.pdf",
+        "Faculty Code of Conduct.pdf"
+      ],
+      "expected_topics": [
+        "sexual misconduct investigation",
+        "non-discrimination enforcement",
+        "student disciplinary process",
+        "anonymous reporting channels",
+        "faculty conduct violations"
+      ]
+    },
+    {
+      "id": 8,
+      "category": "hr-academic-overlap",
+      "query": "A tenured faculty member was denied promotion to full professor. What are their appeal rights, what role does the faculty code of conduct play if they file a grievance, and how does it intersect with their employment contract?",
+      "expected_relevant_policies": [
+        "Appointment, Retention, and Promotion and Faculty Titles.pdf",
+        "Faculty Code of Conduct.pdf",
+        "Violations of Faculty Codes and Standards Policies and Procedures.pdf",
+        "Faculty Evaluations.pdf",
+        "Employment Termination.pdf"
+      ],
+      "expected_topics": [
+        "promotion review and appeal process",
+        "faculty code of conduct application",
+        "violation procedures",
+        "faculty evaluation criteria",
+        "employment contract terms"
+      ]
+    },
+    {
+      "id": 9,
+      "category": "hr-academic-overlap",
+      "query": "An adjunct faculty member is teaching three courses this semester. What is their workload classification, are they eligible for any employee benefits, and how does this affect their academic salary tier?",
+      "expected_relevant_policies": [
+        "Faculty Workload.pdf",
+        "Academic Salaries.pdf",
+        "Employee Benefits.pdf",
+        "Job Classification and Compensation.pdf",
+        "Appointment, Retention, and Promotion and Faculty Titles.pdf"
+      ],
+      "expected_topics": [
+        "adjunct workload definition",
+        "academic salary structure",
+        "benefits eligibility",
+        "job classification tiers",
+        "faculty title and rank"
+      ]
+    },
+    {
+      "id": 10,
+      "category": "hr-academic-overlap",
+      "query": "A faculty member is repeatedly missing required office hours and failing to submit course evaluations. What policies define their obligations, what evaluation criteria apply, and what disciplinary steps are available?",
+      "expected_relevant_policies": [
+        "Faculty Office Hours.pdf",
+        "Course Evaluations.pdf",
+        "Faculty Code of Conduct.pdf",
+        "Faculty Evaluations.pdf",
+        "Violations of Faculty Codes and Standards Policies and Procedures.pdf"
+      ],
+      "expected_topics": [
+        "office hours requirements",
+        "course evaluation obligations",
+        "faculty conduct standards",
+        "performance evaluation",
+        "violation and discipline procedures"
+      ]
+    },
+    {
+      "id": 11,
+      "category": "hr-academic-overlap",
+      "query": "A tenured faculty member wants to take a sabbatical leave next year. What is the approval process, how is their salary handled, do they keep their benefits, and how does it affect their teaching workload?",
+      "expected_relevant_policies": [
+        "Faculty Workload.pdf",
+        "Academic Salaries.pdf",
+        "Employee Benefits.pdf",
+        "Appointment, Retention, and Promotion and Faculty Titles.pdf",
+        "Vacation.pdf"
+      ],
+      "expected_topics": [
+        "sabbatical eligibility and approval",
+        "salary during leave",
+        "benefits continuation",
+        "workload adjustment",
+        "leave entitlements"
+      ]
+    },
+    {
+      "id": 12,
+      "category": "hr-academic-overlap",
+      "query": "A new staff member is on probationary period and also enrolled in an AUA graduate program. What are their working-hour restrictions, what evaluation applies during probation, and how is dismissal handled if they fail?",
+      "expected_relevant_policies": [
+        "Probation Period.pdf",
+        "Probation and Dismissal.pdf",
+        "Working Hours of Employees Enrolled in an AUA Academic Program.pdf",
+        "Job Performance Evaluation.pdf",
+        "Work Schedule.pdf"
+      ],
+      "expected_topics": [
+        "probation period duration and rules",
+        "dismissal procedures",
+        "student-employee work hour limits",
+        "performance evaluation during probation",
+        "work schedule constraints"
+      ]
+    },
+    {
+      "id": 13,
+      "category": "hr-academic-overlap",
+      "query": "An international full-time faculty member's contract is up for renewal. What policies govern their housing, contract terms, salary, and any benefits unique to international faculty?",
+      "expected_relevant_policies": [
+        "Housing Arrangements For International Faculty.pdf",
+        "Recruitment and Employment.pdf",
+        "Academic Salaries.pdf",
+        "Employee Benefits.pdf",
+        "Appointment, Retention, and Promotion and Faculty Titles.pdf"
+      ],
+      "expected_topics": [
+        "international faculty housing",
+        "contract renewal process",
+        "academic salary structure",
+        "benefits package",
+        "appointment terms"
+      ]
+    },
+    {
+      "id": 14,
+      "category": "student-lifecycle",
+      "query": "A transfer student is joining AUA mid-program with credits from another university, wants to apply for financial aid, and is considering changing their declared major. Walk me through the policies that apply.",
+      "expected_relevant_policies": [
+        "Transfer Credit.pdf",
+        "Financial Aid.pdf",
+        "Program and Major Change.pdf",
+        "Undergraduate Admissions.pdf",
+        "Carrying over course credits and grades from a previous AUA record to a new record.pdf"
+      ],
+      "expected_topics": [
+        "transfer credit evaluation",
+        "financial aid application",
+        "major change procedure",
+        "admissions requirements",
+        "credit carryover rules"
+      ]
+    },
+    {
+      "id": 15,
+      "category": "student-lifecycle",
+      "query": "A graduate student withdrew two years ago and now wants readmission. They also want a retroactive grade change for a course they took before withdrawal. What policies apply?",
+      "expected_relevant_policies": [
+        "Withdrawal and Readmission Procedures.pdf",
+        "Grade Policies.pdf",
+        "Graduate Admissions.pdf",
+        "Student Records.pdf",
+        "Residency and Graduate Continuous Enrollment.pdf"
+      ],
+      "expected_topics": [
+        "readmission procedures",
+        "grade change rules and timelines",
+        "graduate admissions",
+        "student record updates",
+        "continuous enrollment requirements"
+      ]
+    },
+    {
+      "id": 16,
+      "category": "student-lifecycle",
+      "query": "An undergraduate student is at risk of being placed on academic probation. They want to know about tuition refunds if they withdraw, whether their financial aid is at risk, and what add/drop options remain.",
+      "expected_relevant_policies": [
+        "Grade Policies.pdf",
+        "Tuition Refund.pdf",
+        "Financial Aid.pdf",
+        "Add, Drop and Course Withdrawal.pdf",
+        "Withdrawal and Readmission Procedures.pdf"
+      ],
+      "expected_topics": [
+        "academic probation triggers",
+        "tuition refund schedule",
+        "financial aid impact",
+        "add drop and withdrawal procedures",
+        "withdrawal consequences"
+      ]
+    },
+    {
+      "id": 17,
+      "category": "student-lifecycle",
+      "query": "A newly admitted international graduate student needs help with visa documentation, housing options, and airport pickup. Which policies cover these onboarding services?",
+      "expected_relevant_policies": [
+        "Arranging for Visas and Travel.pdf",
+        "Housing Arrangements For International Faculty.pdf",
+        "Picking up of Arriving International Faculty, Staff and Students to-from Airport.pdf",
+        "Graduate Admissions.pdf",
+        "Identification Cards.pdf"
+      ],
+      "expected_topics": [
+        "visa arrangement procedures",
+        "housing for international community",
+        "airport pickup service",
+        "graduate admissions onboarding",
+        "ID card issuance"
+      ]
+    },
+    {
+      "id": 18,
+      "category": "student-lifecycle",
+      "query": "A student claims their final exam was unfairly graded and wants to appeal. What policies govern final exam administration, grade disputes, and the student's procedural rights?",
+      "expected_relevant_policies": [
+        "Final Exam.pdf",
+        "Grade Policies.pdf",
+        "Student Records.pdf",
+        "Student Code of Ethics.pdf",
+        "Course Syllabus Format.pdf"
+      ],
+      "expected_topics": [
+        "final exam administration",
+        "grade appeal process",
+        "student record correction",
+        "academic integrity considerations",
+        "syllabus and grading transparency"
+      ]
+    },
+    {
+      "id": 19,
+      "category": "student-lifecycle",
+      "query": "An undergraduate wants to earn a graduate certificate while finishing their undergraduate degree. Which policies cover concurrent enrollment, certificate eligibility, residency requirements, and credit limits?",
+      "expected_relevant_policies": [
+        "Concurrent and Non-Concurrent Enrollment and Waiver of Requirements for University-Level Courses.pdf",
+        "Graduate Certificate.pdf",
+        "Residency and Graduate Continuous Enrollment.pdf",
+        "Credit Hour.pdf",
+        "Undergraduate Minors.pdf"
+      ],
+      "expected_topics": [
+        "concurrent enrollment rules",
+        "graduate certificate requirements",
+        "residency rules",
+        "credit hour definitions",
+        "minor and certificate options"
+      ]
+    },
+    {
+      "id": 20,
+      "category": "it-security",
+      "query": "AUA is approving a new remote work arrangement for staff. What existing policies govern remote network access, equipment use, information security, and after-hours building access?",
+      "expected_relevant_policies": [
+        "Remote Access.pdf",
+        "Computer and Network Use.pdf",
+        "Information Technology Security.pdf",
+        "E-Devices Use.pdf",
+        "Access to AUA Campus and Working Hours.pdf"
+      ],
+      "expected_topics": [
+        "remote access authentication",
+        "acceptable use of computers",
+        "information security controls",
+        "device use rules",
+        "campus access hours"
+      ]
+    },
+    {
+      "id": 21,
+      "category": "it-security",
+      "query": "A student is suspected of plagiarism, with evidence collected from their AUA email and Moodle submissions. What policies govern email and Moodle usage, evidence collection, and student conduct investigation?",
+      "expected_relevant_policies": [
+        "E-mail Usage.pdf",
+        "Moodle Usage.pdf",
+        "Student Code of Ethics.pdf",
+        "Student Code of Conduct.pdf",
+        "Information Technology Security.pdf"
+      ],
+      "expected_topics": [
+        "email usage and privacy",
+        "Moodle acceptable use",
+        "academic dishonesty consequences",
+        "student conduct investigation",
+        "IT evidence handling"
+      ]
+    },
+    {
+      "id": 22,
+      "category": "it-security",
+      "query": "A faculty member wants to install specialized software on computers in a teaching lab. Which policies govern lab equipment, network connectivity, ICTS approval, and software installation?",
+      "expected_relevant_policies": [
+        "Guidelines for Computer Laboratories.pdf",
+        "ICTS Services Rules and Regulations.pdf",
+        "Computer and Network Use.pdf",
+        "Local Area Network.pdf",
+        "Reservation of Classrooms, Computer Labs and Auditoria.pdf"
+      ],
+      "expected_topics": [
+        "computer lab management",
+        "ICTS service approvals",
+        "acceptable computer use",
+        "network configuration",
+        "lab reservation procedures"
+      ]
+    },
+    {
+      "id": 23,
+      "category": "it-security",
+      "query": "A staff member's AUA-issued laptop containing confidential employee records was stolen off-campus. What policies cover reporting, employee record protection, IT security breach response, and replacement equipment?",
+      "expected_relevant_policies": [
+        "Information Technology Security.pdf",
+        "Employee Records.pdf",
+        "E-Devices Use.pdf",
+        "Lost and Found.pdf",
+        "Inventory Control and Disposal of Furniture and Equipment.pdf"
+      ],
+      "expected_topics": [
+        "IT security incident response",
+        "employee record confidentiality",
+        "device use and protection",
+        "loss reporting",
+        "equipment inventory tracking"
+      ]
+    },
+    {
+      "id": 24,
+      "category": "it-security",
+      "query": "Communications wants to send a mass email to alumni with a fundraising appeal. Which policies govern mass email approval, donor privacy, and AUA branding/trademark use in the message?",
+      "expected_relevant_policies": [
+        "Mass Email.pdf",
+        "Policy on the Protection of AUA Donors’ Privacy and Communication.pdf",
+        "Solicitation and Acceptance of Gifts.pdf",
+        "AUA Trademark.pdf",
+        "E-mail Usage.pdf"
+      ],
+      "expected_topics": [
+        "mass email approval",
+        "donor privacy protection",
+        "gift solicitation rules",
+        "trademark and branding usage",
+        "email content standards"
+      ]
+    },
+    {
+      "id": 25,
+      "category": "it-security",
+      "query": "AUA wants to implement a Bring-Your-Own-Device (BYOD) policy. Which existing IT policies (computer use, network, remote access, e-devices, information security) would need to be updated or referenced?",
+      "expected_relevant_policies": [
+        "Computer and Network Use.pdf",
+        "Information Technology Security.pdf",
+        "E-Devices Use.pdf",
+        "Remote Access.pdf",
+        "Internet Usage.pdf"
+      ],
+      "expected_topics": [
+        "computer and network acceptable use",
+        "IT security baselines",
+        "personal device controls",
+        "remote access requirements",
+        "internet usage governance"
+      ]
+    },
+    {
+      "id": 26,
+      "category": "financial-operations",
+      "query": "A research center received an externally funded grant and wants to purchase $25,000 of lab equipment. What policies govern purchasing approval, signature authority, project budgets, and grants accounting?",
+      "expected_relevant_policies": [
+        "Purchasing of Goods and Services.pdf",
+        "Signature Authority.pdf",
+        "Items and Activities to be Covered by Specific Projects’ Budgets.pdf",
+        "Projects and Grants Accounting.pdf",
+        "Externally-Funded Grants and Programs.pdf"
+      ],
+      "expected_topics": [
+        "purchasing process and thresholds",
+        "signature authority limits",
+        "project-specific budgeting",
+        "grants accounting requirements",
+        "external grant administration"
+      ]
+    },
+    {
+      "id": 27,
+      "category": "financial-operations",
+      "query": "A faculty member is traveling abroad for a conference, with two extra days of personal travel added. What policies govern business travel reimbursement, foreign currency, transportation ordering, and what's NOT reimbursable?",
+      "expected_relevant_policies": [
+        "Business Travel.pdf",
+        "Foreign Currency Exchange.pdf",
+        "Ordering Transportation.pdf",
+        "Reimbursing for AUA Services within the AUA.pdf",
+        "Financial Services General Provisions.pdf"
+      ],
+      "expected_topics": [
+        "business travel reimbursement rules",
+        "foreign currency handling",
+        "transportation procurement",
+        "non-reimbursable expenses",
+        "financial services controls"
+      ]
+    },
+    {
+      "id": 28,
+      "category": "financial-operations",
+      "query": "A research center is projecting a budget overrun for the year. What policies govern operational budget development, overhead allocation, departmental reporting, and approval for additional spending?",
+      "expected_relevant_policies": [
+        "Operational Budget Development Process.pdf",
+        "Items and Activities Covered by Overhead and Allocation of Overhead.pdf",
+        "Reports by Departments.pdf",
+        "Signature Authority.pdf",
+        "Funds Transfer by Research Centers.pdf"
+      ],
+      "expected_topics": [
+        "operational budget process",
+        "overhead allocation rules",
+        "departmental reporting",
+        "approval authority for overruns",
+        "research center fund transfers"
+      ]
+    },
+    {
+      "id": 29,
+      "category": "financial-operations",
+      "query": "A visiting international scholar needs to be paid in foreign currency for a 3-month stipend. What policies govern foreign currency exchange, payroll processing of short-term contracts, and cash disbursement?",
+      "expected_relevant_policies": [
+        "Foreign Currency Exchange.pdf",
+        "Payroll Processing of Employment Contracts, Civil Service Contracts and Bonus Payments.pdf",
+        "Cash Collection and Disbursement.pdf",
+        "Financial Services General Provisions.pdf",
+        "Housing Arrangements For International Faculty.pdf"
+      ],
+      "expected_topics": [
+        "foreign currency exchange",
+        "short-term contract payroll",
+        "cash disbursement procedures",
+        "financial services authority",
+        "international scholar housing"
+      ]
+    },
+    {
+      "id": 30,
+      "category": "financial-operations",
+      "query": "AUA wants to sub-grant part of a federal research grant to an external partner university. Which policies govern sub-granting, grants accounting, signature authority, and projects-and-grants overhead?",
+      "expected_relevant_policies": [
+        "Sub-Granting.pdf",
+        "Projects and Grants Accounting.pdf",
+        "Externally-Funded Grants and Programs.pdf",
+        "Signature Authority.pdf",
+        "Items and Activities Covered by Overhead and Allocation of Overhead.pdf"
+      ],
+      "expected_topics": [
+        "sub-granting requirements",
+        "grants accounting controls",
+        "external grant compliance",
+        "signature authority for grants",
+        "overhead allocation"
+      ]
+    },
+    {
+      "id": 31,
+      "category": "financial-operations",
+      "query": "A donor wants to establish an endowed scholarship in their name with specific eligibility criteria. Which policies govern gift acceptance, endowments, donor privacy, named programs, and financial aid distribution?",
+      "expected_relevant_policies": [
+        "Solicitation and Acceptance of Gifts.pdf",
+        "Gifts, Scholarships and Endowments.pdf",
+        "Endowed Named Professors Program.pdf",
+        "Policy on the Protection of AUA Donors’ Privacy and Communication.pdf",
+        "Financial Aid.pdf"
+      ],
+      "expected_topics": [
+        "gift acceptance criteria",
+        "endowment management",
+        "named program rules",
+        "donor privacy",
+        "scholarship distribution"
+      ]
+    },
+    {
+      "id": 32,
+      "category": "facilities-events",
+      "query": "An external film production company wants to shoot scenes on AUA campus and use the AUA logo in marketing. Which policies govern campus access, filming, trademark use, and promotional material approval?",
+      "expected_relevant_policies": [
+        "Filming for Commercial Use.pdf",
+        "Photo Video and Audio Use.pdf",
+        "AUA Trademark.pdf",
+        "Publication of Promotional Materials, Including Audio_Video, Visual, and Print.pdf",
+        "Access to AUA Campus and Working Hours.pdf"
+      ],
+      "expected_topics": [
+        "commercial filming approval",
+        "photo and video use rules",
+        "trademark licensing",
+        "promotional material clearance",
+        "campus access for external parties"
+      ]
+    },
+    {
+      "id": 33,
+      "category": "facilities-events",
+      "query": "A classroom is being converted into a new computer lab. Which policies govern renovation approval, equipment provision, computer lab guidelines, electrical installation, and room allocation?",
+      "expected_relevant_policies": [
+        "Renovation of the AUA Premises.pdf",
+        "Provision and Use of Furniture and Equipment.pdf",
+        "Guidelines for Computer Laboratories.pdf",
+        "Electrical Wiring and Equipment Installation.pdf",
+        "Allocating Rooms to Departments.pdf"
+      ],
+      "expected_topics": [
+        "renovation approval process",
+        "equipment provisioning",
+        "computer lab standards",
+        "electrical installation safety",
+        "room allocation to departments"
+      ]
+    },
+    {
+      "id": 34,
+      "category": "facilities-events",
+      "query": "AUA is hosting a high-profile press event with catering, security presence, and visitor parking. Which policies govern event approval, food service, media inquiries, security, and parking arrangements?",
+      "expected_relevant_policies": [
+        "Events Management.pdf",
+        "Regulations on Provision of Facilities and Food Services.pdf",
+        "Press And Media Inquiries.pdf",
+        "Security and Safety on AUA Premises.pdf",
+        "Parking.pdf"
+      ],
+      "expected_topics": [
+        "event approval process",
+        "food service regulations",
+        "press and media coordination",
+        "campus security for events",
+        "visitor parking"
+      ]
+    },
+    {
+      "id": 35,
+      "category": "facilities-events",
+      "query": "A student group wants to reserve an auditorium for a religious event with external speakers. Which policies cover room reservations, political/religious activity, posting announcements, and event management?",
+      "expected_relevant_policies": [
+        "Reservation of Classrooms, Computer Labs and Auditoria.pdf",
+        "Political and Religious Activity at AUA.pdf",
+        "Posting Signs and Announcements.pdf",
+        "Events Management.pdf",
+        "Student Code of Conduct.pdf"
+      ],
+      "expected_topics": [
+        "auditorium reservation procedure",
+        "religious activity rules on campus",
+        "announcement posting rules",
+        "event management approvals",
+        "student group conduct"
+      ]
+    },
+    {
+      "id": 36,
+      "category": "facilities-events",
+      "query": "AUA is implementing campus-wide keyless electronic entry. Which existing policies on key management, campus access, ID cards, IT security, and emergency operations would need updating?",
+      "expected_relevant_policies": [
+        "Management of Keys and Locks.pdf",
+        "Access to AUA Campus and Working Hours.pdf",
+        "Identification Cards.pdf",
+        "Information Technology Security.pdf",
+        "Emergency Operations and Crisis Management.pdf"
+      ],
+      "expected_topics": [
+        "key and lock management",
+        "campus access controls",
+        "ID card issuance and use",
+        "IT security integration",
+        "emergency access procedures"
+      ]
+    },
+    {
+      "id": 37,
+      "category": "facilities-events",
+      "query": "An extended power outage hits during the day. Which policies govern emergency operations, accidental harm compensation, safety responsibilities, air conditioning failures, and health center response?",
+      "expected_relevant_policies": [
+        "Emergency Operations and Crisis Management.pdf",
+        "Compensation for Accidental Harm.pdf",
+        "Safety at Workplace and the Employees' Responsibility.pdf",
+        "Air Conditioning.pdf",
+        "Health Center.pdf"
+      ],
+      "expected_topics": [
+        "emergency response coordination",
+        "accidental harm compensation",
+        "workplace safety responsibility",
+        "facility climate controls",
+        "health center services"
+      ]
+    },
+    {
+      "id": 38,
+      "category": "research-administration",
+      "query": "A research project spanning two departments will involve graduate student researchers and human subjects. Which policies cover IRB approval, student research participation, shared lab resources, and research ethics?",
+      "expected_relevant_policies": [
+        "Research Ethics and IRB.pdf",
+        "Shared Research Facilities.pdf",
+        "Student Code of Ethics.pdf",
+        "Conflict of Interest for Administration, Faculty and Staff.pdf",
+        "Projects and Grants Accounting.pdf"
+      ],
+      "expected_topics": [
+        "IRB approval requirements",
+        "shared research facility access",
+        "student research ethics",
+        "conflict of interest disclosure",
+        "research project accounting"
+      ]
+    },
+    {
+      "id": 39,
+      "category": "research-administration",
+      "query": "A faculty member developed a patentable invention using AUA shared lab resources and externally funded grant money. Which policies govern intellectual property ownership, commercialization, shared facility use, and grant compliance?",
+      "expected_relevant_policies": [
+        "Intellectual Property and Commercialization.pdf",
+        "Copyright.pdf",
+        "Shared Research Facilities.pdf",
+        "Externally-Funded Grants and Programs.pdf",
+        "Conflict of Interest for Administration, Faculty and Staff.pdf"
+      ],
+      "expected_topics": [
+        "IP ownership and licensing",
+        "copyright considerations",
+        "shared facility usage rules",
+        "external grant compliance",
+        "conflict of interest in commercialization"
+      ]
+    },
+    {
+      "id": 40,
+      "category": "research-administration",
+      "query": "AUA received a multi-year external research grant requiring overhead allocation and sub-grants to two partners. Which policies cover grant administration, overhead, sub-granting, project budgets, and external audit?",
+      "expected_relevant_policies": [
+        "Externally-Funded Grants and Programs.pdf",
+        "Items and Activities Covered by Overhead and Allocation of Overhead.pdf",
+        "Sub-Granting.pdf",
+        "Items and Activities to be Covered by Specific Projects’ Budgets.pdf",
+        "External Audit Review.pdf"
+      ],
+      "expected_topics": [
+        "external grant administration",
+        "overhead allocation methodology",
+        "sub-grant compliance",
+        "project budget controls",
+        "audit requirements"
+      ]
+    },
+    {
+      "id": 41,
+      "category": "research-administration",
+      "query": "A whistleblower complaint alleges a research conflict of interest where a faculty member is steering funded research toward a company they own. Which policies cover whistleblower protections, conflict of interest, faculty conduct, and research ethics?",
+      "expected_relevant_policies": [
+        "Whistleblower_ Responsible and Ethical Conduct at AUA.pdf",
+        "Conflict of Interest for Administration, Faculty and Staff.pdf",
+        "Faculty Code of Conduct.pdf",
+        "Research Ethics and IRB.pdf",
+        "Outside Employment.pdf"
+      ],
+      "expected_topics": [
+        "whistleblower protections",
+        "conflict of interest disclosure",
+        "faculty conduct violations",
+        "research ethics review",
+        "outside employment rules"
+      ]
+    },
+    {
+      "id": 42,
+      "category": "research-administration",
+      "query": "A visiting researcher will spend six months at AUA needing campus access, computer lab use, shared facilities, and housing. Which policies cover their onboarding?",
+      "expected_relevant_policies": [
+        "Access to AUA Campus and Working Hours.pdf",
+        "Guidelines for Computer Laboratories.pdf",
+        "Shared Research Facilities.pdf",
+        "Housing Arrangements For International Faculty.pdf",
+        "Identification Cards.pdf"
+      ],
+      "expected_topics": [
+        "campus access for visitors",
+        "computer lab usage",
+        "shared research facility access",
+        "housing arrangements",
+        "ID card issuance"
+      ]
+    },
+    {
+      "id": 43,
+      "category": "research-administration",
+      "query": "A research center wants to transfer unused funds from one project to another mid-year. What policies govern fund transfers between research projects, project-specific budgets, overhead, and grants accounting?",
+      "expected_relevant_policies": [
+        "Funds Transfer by Research Centers.pdf",
+        "Items and Activities to be Covered by Specific Projects’ Budgets.pdf",
+        "Items and Activities Covered by Overhead and Allocation of Overhead.pdf",
+        "Projects and Grants Accounting.pdf",
+        "Externally-Funded Grants and Programs.pdf"
+      ],
+      "expected_topics": [
+        "fund transfer rules between projects",
+        "project-specific budgeting",
+        "overhead allocation",
+        "grants accounting",
+        "external grant constraints"
+      ]
+    },
+    {
+      "id": 44,
+      "category": "conduct-ethics",
+      "query": "A student alleges sexual misconduct against a faculty member. Which policies cover reporting, investigation, faculty conduct, student protections, and disciplinary outcomes?",
+      "expected_relevant_policies": [
+        "Sexual Misconduct.pdf",
+        "Faculty Code of Conduct.pdf",
+        "Violations of Faculty Codes and Standards Policies and Procedures.pdf",
+        "Student Code of Conduct.pdf",
+        "Non-Discrimination.pdf"
+      ],
+      "expected_topics": [
+        "sexual misconduct reporting and investigation",
+        "faculty code violations",
+        "discipline procedures",
+        "student rights during investigation",
+        "non-discrimination considerations"
+      ]
+    },
+    {
+      "id": 45,
+      "category": "conduct-ethics",
+      "query": "A student notices what appears to be financial fraud in a research center where they work as a research assistant. What protections do they have, what reporting channels exist, and what audit/investigation policies apply?",
+      "expected_relevant_policies": [
+        "Whistleblower_ Responsible and Ethical Conduct at AUA.pdf",
+        "Student Code of Ethics.pdf",
+        "External Audit Review.pdf",
+        "Conflict of Interest for Administration, Faculty and Staff.pdf",
+        "Cash Collection and Disbursement.pdf"
+      ],
+      "expected_topics": [
+        "whistleblower protections",
+        "student ethical obligations",
+        "external audit triggers",
+        "conflict of interest reporting",
+        "cash handling controls"
+      ]
+    },
+    {
+      "id": 46,
+      "category": "conduct-ethics",
+      "query": "A faculty member has a paid consulting arrangement with a company they want to involve in their research. Which policies govern outside employment, conflict of interest, research ethics, intellectual property, and faculty conduct?",
+      "expected_relevant_policies": [
+        "Outside Employment.pdf",
+        "Conflict of Interest for Administration, Faculty and Staff.pdf",
+        "Research Ethics and IRB.pdf",
+        "Intellectual Property and Commercialization.pdf",
+        "Faculty Code of Conduct.pdf"
+      ],
+      "expected_topics": [
+        "outside employment disclosure",
+        "conflict of interest management",
+        "research ethics review",
+        "IP and commercialization",
+        "faculty conduct standards"
+      ]
+    },
+    {
+      "id": 47,
+      "category": "conduct-ethics",
+      "query": "A major donor is pressuring AUA to influence a curriculum decision and include their name on a building. Which policies govern donor privacy, gift acceptance, academic freedom, named programs, and trustee conflict of interest?",
+      "expected_relevant_policies": [
+        "Policy on the Protection of AUA Donors’ Privacy and Communication.pdf",
+        "Solicitation and Acceptance of Gifts.pdf",
+        "Statement on Academic Freedom.pdf",
+        "Endowed Named Professors Program.pdf",
+        "Conflict of Interest for Trustees and Directors.pdf"
+      ],
+      "expected_topics": [
+        "donor privacy and communication",
+        "gift acceptance criteria",
+        "academic freedom protection",
+        "named program rules",
+        "trustee conflict of interest"
+      ]
+    },
+    {
+      "id": 48,
+      "category": "conduct-ethics",
+      "query": "A substance abuse incident occurred at a student-organized event held on campus. Which policies cover substance abuse, student conduct, event management, smoke-free environment, and health center response?",
+      "expected_relevant_policies": [
+        "Substance Abuse.pdf",
+        "Student Code of Conduct.pdf",
+        "Events Management.pdf",
+        "Smoke Free Environment.pdf",
+        "Health Center.pdf"
+      ],
+      "expected_topics": [
+        "substance abuse policy",
+        "student conduct enforcement",
+        "event management rules",
+        "smoke-free environment",
+        "health center incident response"
+      ]
+    },
+    {
+      "id": 49,
+      "category": "conduct-ethics",
+      "query": "A faculty member wants to organize a political rally on campus during election season. Which policies cover political activity, event management, room reservations, faculty conduct, and posting announcements?",
+      "expected_relevant_policies": [
+        "Political and Religious Activity at AUA.pdf",
+        "Events Management.pdf",
+        "Reservation of Classrooms, Computer Labs and Auditoria.pdf",
+        "Faculty Code of Conduct.pdf",
+        "Posting Signs and Announcements.pdf"
+      ],
+      "expected_topics": [
+        "political activity rules",
+        "event management approval",
+        "room reservation procedure",
+        "faculty conduct in public activity",
+        "announcement and posting policy"
+      ]
+    },
+    {
+      "id": 50,
+      "category": "conduct-ethics",
+      "query": "A senior faculty member is retiring. What policies cover employment termination, IP and copyright they created at AUA, document retention of their records, employee record disposition, and faculty title use post-retirement?",
+      "expected_relevant_policies": [
+        "Employment Termination.pdf",
+        "Intellectual Property and Commercialization.pdf",
+        "Copyright.pdf",
+        "Employee Records.pdf",
+        "Appointment, Retention, and Promotion and Faculty Titles.pdf"
+      ],
+      "expected_topics": [
+        "employment termination procedure",
+        "IP rights post-employment",
+        "copyright ownership",
+        "employee record retention",
+        "emeritus or retired faculty titles"
+      ]
+    }
+  ]
+}
