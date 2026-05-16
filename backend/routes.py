@@ -56,7 +56,9 @@ async def answer_chat_question(
     question = payload.question
     attachments = None
     if payload.attachments:
-        raw = [{"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments]
+        raw = [
+            {"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments
+        ]
         question, processed = normalize_attachments(question, raw)
         attachments = processed or None
 
@@ -89,7 +91,9 @@ async def stream_chat_answer(
     question = payload.question
     attachments = None
     if payload.attachments:
-        raw = [{"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments]
+        raw = [
+            {"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments
+        ]
         question, processed = normalize_attachments(question, raw)
         attachments = processed or None
 

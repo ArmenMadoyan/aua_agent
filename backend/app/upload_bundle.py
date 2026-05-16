@@ -15,6 +15,7 @@ from backend.app.document_text import extract_text_from_bytes, trim_document_tex
 
 # ── API attachment normalizer ────────────────────────────────────────
 
+
 def _sniff_image_mime(data: bytes, declared: str) -> str:
     if data[:3] == b"\xff\xd8\xff":
         return "image/jpeg"
@@ -69,7 +70,9 @@ def normalize_attachments(
 
             if parts:
                 for mime_type, b64_png in parts:
-                    image_attachments.append({"mime_type": mime_type, "base64": b64_png})
+                    image_attachments.append(
+                        {"mime_type": mime_type, "base64": b64_png}
+                    )
             elif extracted:
                 doc_sections.append(trim_document_text(extracted, 80_000))
 
@@ -81,6 +84,7 @@ def normalize_attachments(
         ).strip()
 
     return question, image_attachments
+
 
 # ── media conversion (formerly grading_media.py) ────────────────────
 

@@ -194,17 +194,31 @@ def _stream_langgraph_agent(
         elif mode == "updates" and isinstance(payload, dict):
             _collect_tool_names_from_updates(payload, tool_acc)
             import re as _re
+
             for node, inner in payload.items():
                 if not isinstance(inner, dict):
                     continue
                 for m in inner.get("messages", []):
                     # LLM decided to call a tool — emit "Creating…" with full args
                     for tc in getattr(m, "tool_calls", None) or []:
-                        name = tc.get("name") if isinstance(tc, dict) else getattr(tc, "name", "")
-                        args = (tc.get("args") if isinstance(tc, dict) else getattr(tc, "args", {})) or {}
+                        name = (
+                            tc.get("name")
+                            if isinstance(tc, dict)
+                            else getattr(tc, "name", "")
+                        )
+                        args = (
+                            tc.get("args")
+                            if isinstance(tc, dict)
+                            else getattr(tc, "args", {})
+                        ) or {}
                         label = _TOOL_LABELS.get(name)
                         if label:
-                            title = args.get("title") or args.get("deck_title") or args.get("question") or ""
+                            title = (
+                                args.get("title")
+                                or args.get("deck_title")
+                                or args.get("question")
+                                or ""
+                            )
                             desc = f"{label}: {title}" if title else label
                             yield f"[PROG]{desc}"
                     # Tool finished — emit "Saved: filename"
