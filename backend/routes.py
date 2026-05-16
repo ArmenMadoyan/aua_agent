@@ -10,6 +10,7 @@ from sse_starlette.sse import EventSourceResponse
 from backend.auth import require_auth
 from backend.db import get_session
 from backend import schemas, services
+from backend.app.upload_bundle import normalize_attachments
 
 logger = logging.getLogger(__name__)
 
@@ -52,11 +53,12 @@ async def answer_chat_question(
     payload: schemas.ChatQuestionRequest,
     session: AsyncSession = Depends(get_session),
 ):
+    question = payload.question
     attachments = None
     if payload.attachments:
-        attachments = [
-            {"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments
-        ]
+        raw = [{"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments]
+        question, processed = normalize_attachments(question, raw)
+        attachments = processed or None
 
     ref_parts = None
     if payload.reference_documents:
@@ -66,7 +68,7 @@ async def answer_chat_question(
         result = await services.answer_question(
             session,
             payload.chat_id,
-            payload.question,
+            question,
             agent=payload.agent,
             syllabus_text=payload.syllabus_text,
             attachments=attachments,
@@ -84,11 +86,12 @@ async def stream_chat_answer(
     payload: schemas.ChatQuestionRequest,
     session: AsyncSession = Depends(get_session),
 ):
+    question = payload.question
     attachments = None
     if payload.attachments:
-        attachments = [
-            {"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments
-        ]
+        raw = [{"mime_type": a.mime_type, "base64": a.base64} for a in payload.attachments]
+        question, processed = normalize_attachments(question, raw)
+        attachments = processed or None
 
     ref_parts = None
     if payload.reference_documents:
@@ -99,7 +102,7 @@ async def stream_chat_answer(
             async for token in services.stream_answer(
                 session,
                 payload.chat_id,
-                payload.question,
+                question,
                 agent=payload.agent,
                 syllabus_text=payload.syllabus_text,
                 attachments=attachments,

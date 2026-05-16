@@ -85,6 +85,9 @@ if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
 if "messages" not in st.session_state:
     st.session_state.messages = []
+if "message_files" not in st.session_state:
+    # {message_index: [(filename, bytes, mime_type), ...]}
+    st.session_state.message_files = {}
 
 BATCH_UPLOAD_SESSION_KEY = "batch_attachments"
 
@@ -222,12 +225,21 @@ if st.session_state.current_chat_id:
 
 chat_container = st.container()
 with chat_container:
-    for message in st.session_state.messages:
+    for i, message in enumerate(st.session_state.messages):
         role = message["role"]
         content = message["content"]
 
         with st.chat_message(role):
             st.markdown(content)
+            for fname, fdata, fmime in st.session_state.message_files.get(i, []):
+                icon = "📊" if fname.endswith(".pptx") else "📄"
+                st.download_button(
+                    label=f"{icon} {fname}",
+                    data=fdata,
+                    file_name=fname,
+                    mime=fmime,
+                    key=f"dl_{i}_{fname}",
+                )
 
 if prompt := st.chat_input("Ask a question..."):
     if st.session_state.current_chat_id is None:
@@ -275,9 +287,10 @@ if prompt := st.chat_input("Ask a question..."):
                 body["attachments"] = attachments
 
             collected_tokens: list[str] = []
+            saved_files: list[str] = []
 
             try:
-                with httpx.Client(timeout=300) as client:
+                with httpx.Client(timeout=1800) as client:
                     with client.stream(
                         "POST",
                         f"{API_BASE}/chat/stream",
@@ -285,7 +298,9 @@ if prompt := st.chat_input("Ask a question..."):
                         headers={"Accept": "text/event-stream"},
                     ) as response:
                         response.raise_for_status()
+                        status = st.empty()
                         placeholder = st.empty()
+                        status.info("⏳ Thinking…")
                         for line in response.iter_lines():
                             if line.startswith("data: "):
                                 raw = line[6:]
@@ -293,11 +308,17 @@ if prompt := st.chat_input("Ask a question..."):
                                     token = json.loads(raw)
                                 except (json.JSONDecodeError, TypeError):
                                     token = raw
-                                collected_tokens.append(token)
-                                placeholder.markdown("".join(collected_tokens) + " ▌")
+                                if isinstance(token, str) and token.startswith("[PROG]"):
+                                    status.info(f"⏳ {token[6:]}")
+                                    if token.startswith("[PROG]✅ Saved: "):
+                                        saved_files.append(token[len("[PROG]✅ Saved: "):].strip())
+                                else:
+                                    collected_tokens.append(token)
+                                    placeholder.markdown("".join(collected_tokens) + " ▌")
                         # Final render without cursor
                         if collected_tokens:
                             placeholder.markdown("".join(collected_tokens))
+                        status.empty()
             except httpx.RemoteProtocolError:
                 pass
 
@@ -309,11 +330,34 @@ if prompt := st.chat_input("Ask a question..."):
                 reply = result["answer"]
                 st.markdown(reply)
 
-            artifact = re.search(r"saved as '([^']+\.(?:pptx|pdf))'", reply)
-            if artifact:
-                name = artifact.group(1)
-                download_url = f"{API_BASE}/course/artifacts/{name}"
-                st.markdown(f"📥 [**Download {name}**]({download_url})")
+            # Prefer filenames captured from PROG tokens; fall back to reply text parsing
+            if not saved_files:
+                saved_files = re.findall(r"saved as '([^']+\.(?:pptx|pdf))'", reply)
+
+            msg_idx = len(st.session_state.messages)
+            if saved_files:
+                fetched = []
+                for name in saved_files:
+                    try:
+                        r = httpx.get(f"{API_BASE}/course/artifacts/{name}", timeout=30)
+                        r.raise_for_status()
+                        mime = (
+                            "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                            if name.endswith(".pptx") else "application/pdf"
+                        )
+                        fetched.append((name, r.content, mime))
+                        icon = "📊" if name.endswith(".pptx") else "📄"
+                        st.download_button(
+                            label=f"{icon} {name}",
+                            data=r.content,
+                            file_name=name,
+                            mime=mime,
+                            key=f"dl_new_{name}",
+                        )
+                    except Exception:
+                        pass
+                if fetched:
+                    st.session_state.message_files[msg_idx] = fetched
 
             st.session_state.messages.append({"role": "assistant", "content": reply})
 

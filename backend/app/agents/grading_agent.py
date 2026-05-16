@@ -64,7 +64,7 @@ class GradingAgent:
                             0,
                             {
                                 "type": "text",
-                                "text": "Grade this homework submission using the rubric and instructions in our conversation.",
+                                "text": "Please look at this image and help me with it.",
                             },
                         )
                     lc.append(HumanMessage(content=parts))

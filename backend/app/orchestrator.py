@@ -158,6 +158,13 @@ def _collect_tool_names_from_updates(payload: dict[str, Any], acc: list[str]) ->
                     acc.append(n)
 
 
+_TOOL_LABELS = {
+    "create_course_pdf": "📄 Creating",
+    "create_powerpoint_deck": "📊 Creating slides",
+    "retrieve_from_knowledge_base": "🔍 Searching knowledge base",
+}
+
+
 def _stream_langgraph_agent(
     agent, messages: list[dict], tool_acc: list[str], *, thread_id: str = "default"
 ) -> Iterator[str]:
@@ -186,6 +193,26 @@ def _stream_langgraph_agent(
                 yield raw
         elif mode == "updates" and isinstance(payload, dict):
             _collect_tool_names_from_updates(payload, tool_acc)
+            import re as _re
+            for node, inner in payload.items():
+                if not isinstance(inner, dict):
+                    continue
+                for m in inner.get("messages", []):
+                    # LLM decided to call a tool — emit "Creating…" with full args
+                    for tc in getattr(m, "tool_calls", None) or []:
+                        name = tc.get("name") if isinstance(tc, dict) else getattr(tc, "name", "")
+                        args = (tc.get("args") if isinstance(tc, dict) else getattr(tc, "args", {})) or {}
+                        label = _TOOL_LABELS.get(name)
+                        if label:
+                            title = args.get("title") or args.get("deck_title") or args.get("question") or ""
+                            desc = f"{label}: {title}" if title else label
+                            yield f"[PROG]{desc}"
+                    # Tool finished — emit "Saved: filename"
+                    content = getattr(m, "content", "") or ""
+                    if "saved as '" in content:
+                        match = _re.search(r"saved as '([^']+)'", content)
+                        if match:
+                            yield f"[PROG]✅ Saved: {match.group(1)}"
 
 
 # ── public API ──────────────────────────────────────────────────────
@@ -252,7 +279,15 @@ def iter_chat_turn_tokens(
             yield from GradingAgent.stream(msgs)
             return
 
-        choice = RouterAgent.route(msgs, syllabus_available=syllabus_available)
+        # If the latest user turn has image attachments, only the grading agent
+        # can see them — text agents strip vision content.
+        latest_has_images = bool(
+            msgs and msgs[-1].get("role") == "user" and msgs[-1].get("attachments")
+        )
+        if latest_has_images:
+            choice = "grading"
+        else:
+            choice = RouterAgent.route(msgs, syllabus_available=syllabus_available)
         meta["agent_used"] = choice
 
         if choice == "general":
@@ -272,11 +307,17 @@ def iter_chat_turn_tokens(
             yield from GradingAgent.stream(msgs)
             return
 
-        base = _strip_for_text_agents(msgs)
-        to_send = _inject_syllabus(base, syllabus) if syllabus_available else base
-        yield from _stream_langgraph_agent(
-            _get_course_agent(), to_send, tool_acc, thread_id=str(chat_id)
-        )
+        if choice == "course":
+            base = _strip_for_text_agents(msgs)
+            to_send = _inject_syllabus(base, syllabus) if syllabus_available else base
+            yield from _stream_langgraph_agent(
+                _get_course_agent(), to_send, tool_acc, thread_id=str(chat_id)
+            )
+            return
+
+        # Fallback — should not happen with a well-behaved router
+        logger.warning("Unexpected router choice %r — falling back to general", choice)
+        yield from GeneralAgent.stream(_strip_for_text_agents(msgs))
     except Exception:
         logger.exception("Error during chat turn (agent=%s)", meta.get("agent_used"))
         raise

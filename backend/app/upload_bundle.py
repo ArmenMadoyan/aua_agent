@@ -13,6 +13,75 @@ from typing import Any
 
 from backend.app.document_text import extract_text_from_bytes, trim_document_text
 
+# ── API attachment normalizer ────────────────────────────────────────
+
+def _sniff_image_mime(data: bytes, declared: str) -> str:
+    if data[:3] == b"\xff\xd8\xff":
+        return "image/jpeg"
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return "image/png"
+    if data[:6] in (b"GIF87a", b"GIF89a"):
+        return "image/gif"
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "image/webp"
+    return declared
+
+
+def normalize_attachments(
+    question: str, attachments: list[dict]
+) -> tuple[str, list[dict]]:
+    """
+    Convert raw API attachments into a (question, image_attachments) pair the LLM can consume.
+
+    The frontend sends PDFs as ``mime_type: "application/pdf"`` base64 blobs.
+    Claude's vision API only accepts image types, so we normalise here:
+      - Text-heavy PDFs  → extracted text appended to the question.
+      - Scanned PDFs     → rasterised to PNG image attachments.
+      - Images           → passed through unchanged.
+    """
+    doc_sections: list[str] = []
+    image_attachments: list[dict] = []
+
+    for att in attachments:
+        mime = att.get("mime_type", "")
+        b64 = att.get("base64", "")
+
+        if mime != "application/pdf":
+            raw = base64.standard_b64decode(b64)
+            actual_mime = _sniff_image_mime(raw, mime)
+            image_attachments.append({"mime_type": actual_mime, "base64": b64})
+            continue
+
+        raw = base64.standard_b64decode(b64)
+
+        try:
+            extracted = extract_text_from_bytes(filename="upload.pdf", data=raw).strip()
+        except Exception:
+            extracted = ""
+
+        if len(extracted) >= SCANNED_PDF_CHAR_THRESHOLD:
+            doc_sections.append(trim_document_text(extracted, 80_000))
+        else:
+            try:
+                parts = pdf_bytes_to_png_base64_parts(raw)
+            except Exception:
+                parts = []
+
+            if parts:
+                for mime_type, b64_png in parts:
+                    image_attachments.append({"mime_type": mime_type, "base64": b64_png})
+            elif extracted:
+                doc_sections.append(trim_document_text(extracted, 80_000))
+
+    if doc_sections:
+        question = (
+            question.rstrip()
+            + "\n\n--- Attached files (extracted text) ---\n\n"
+            + "\n\n".join(doc_sections)
+        ).strip()
+
+    return question, image_attachments
+
 # ── media conversion (formerly grading_media.py) ────────────────────
 
 MAX_PDF_PAGES = 12

@@ -11,7 +11,9 @@ dist/
 site/
 pip-wheel-metadata/
 *.whl
-
+Gemini-2.5-tests/
+Capstone_Poster_Armen_Madoyan.pdf
+eval_reports/
 # --------------------- Virtual environments -----------------------
 .venv/
 venv/
