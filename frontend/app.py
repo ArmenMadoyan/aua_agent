@@ -308,13 +308,19 @@ if prompt := st.chat_input("Ask a question..."):
                                     token = json.loads(raw)
                                 except (json.JSONDecodeError, TypeError):
                                     token = raw
-                                if isinstance(token, str) and token.startswith("[PROG]"):
+                                if isinstance(token, str) and token.startswith(
+                                    "[PROG]"
+                                ):
                                     status.info(f"⏳ {token[6:]}")
                                     if token.startswith("[PROG]✅ Saved: "):
-                                        saved_files.append(token[len("[PROG]✅ Saved: "):].strip())
+                                        saved_files.append(
+                                            token[len("[PROG]✅ Saved: ") :].strip()
+                                        )
                                 else:
                                     collected_tokens.append(token)
-                                    placeholder.markdown("".join(collected_tokens) + " ▌")
+                                    placeholder.markdown(
+                                        "".join(collected_tokens) + " ▌"
+                                    )
                         # Final render without cursor
                         if collected_tokens:
                             placeholder.markdown("".join(collected_tokens))
@@ -343,7 +349,8 @@ if prompt := st.chat_input("Ask a question..."):
                         r.raise_for_status()
                         mime = (
                             "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                            if name.endswith(".pptx") else "application/pdf"
+                            if name.endswith(".pptx")
+                            else "application/pdf"
                         )
                         fetched.append((name, r.content, mime))
                         icon = "📊" if name.endswith(".pptx") else "📄"
